@@ -21,12 +21,15 @@ Completion screenshot included below.
 
 ### 2. PwnedLabs – Breach in the Cloud
 
-**Status:** In Progress
+**Status:** Completed
 
-This lab focuses on cloud security concepts through a practical breach scenario.
+## What I learned
 
-**Evidence:**  
-Completion evidence will be added after the lab is finished.
+In Breach in the Cloud, I analyzed seven AWS CloudTrail JSON files containing 638 events. I filtered the events to trace an unsuccessful S3 listing by `temp-user`, a subsequent successful assumption of `AdminRole`, and later access to an object in the lab’s S3 bucket. The exercise showed me why an investigator must compare identities, timestamps, API actions, and errors rather than judge an incident by event counts alone.
+
+## Evidence
+
+The screenshots show the completion status on each platform. I have excluded the lab flag, AWS credentials, session tokens, and the contents of the retrieved object.
 
 ---
 
