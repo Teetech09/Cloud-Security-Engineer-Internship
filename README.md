@@ -5,14 +5,21 @@ The projects cover cloud security fundamentals, AWS security, identity and acces
 
 Internship Progress
 
-Week 1
 
-- Task 1 – AWS Shared Responsibility Model" (./Week-01/Task-01-Shared-Responsibility-Model/) — Completed
-- Task 2 – AWS Environment Setup — In Progress
-- Task 3 – Upcoming
-- Task 4 – Upcoming
-- Task 5 – Upcoming
-- Task 6 – Upcoming
+### Week 1 — Task 01: AWS Security Fundamentals
+
+**Status: Completed**
+
+| Phase | Work completed | Status |
+
+Phase A | AWS Shared Responsibility Model | Completed |
+Phase B | AWS environment setup | Completed |
+Phase C | Responsibility matrix | Completed |
+Phase D | Risk matrix and threat model | Completed |
+Phase E | TryHackMe Security Principles and PwnedLabs Breach in the Cloud | Completed |
+Phase F | Final management report and evidence archive | Completed |
+
+
 
 Documentation Approach
 
@@ -24,6 +31,6 @@ Each task documents:
 - Security considerations
 - Evidence
 - Challenges encountered
-- Lessons learned
+- Lessons learned 
 
 This repository will be updated throughout the internship as I complete each hands-on project.
