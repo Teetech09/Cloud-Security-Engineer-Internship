@@ -1,1 +1,23 @@
+# Week 1 — Task 2 — Phase A: Theory and Conceptual Foundation
 
+## Objective
+Understand why an AWS account should be secured before deploying workloads.
+
+## Actions taken
+- Reviewed account security concepts covering root-user MFA, IAM user password requirements, and billing alerts.
+- Verified that the root user has a passkey on my phone for MFA.
+- Configured a CloudWatch billing alarm with an SNS notification.
+- Documented the IAM user password settings in `password_policy.json`.
+
+## Key observation
+MFA helps protect privileged sign-in. A password policy sets requirements for IAM user console passwords, while a billing alarm can draw attention to unexpected spending. The alarm is a signal to investigate; it does not prove an attack occurred.
+
+## Evidence
+| File | Description |
+|---|---|
+| [AWS_MFA_Setup.png](evidence/AWS_MFA_Setup.png) | Root-user security credentials page showing the assigned MFA device. |
+| [Billing_Alert_Config.png](evidence/Billing_Alert_Config.png) | CloudWatch billing alarm showing its threshold and SNS notification. |
+| [password_policy.json](password_policy.json) | Documented IAM user password settings. |
+
+## Reflection
+**Why use a billing alarm when MFA is enabled?** MFA protects sign-in, while the alarm alerts me when estimated charges pass my chosen threshold. They address different account risks.
