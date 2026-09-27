@@ -1,1 +1,30 @@
+# Week 1 — Task 2 — Phase B: Homelab Setup
 
+## Objective
+Build a foundation for cloud security experiments using separate public and private subnets and baseline monitoring.
+
+## Actions taken
+- Created `HomelabVPC` with one public subnet and one private subnet.
+- Configured internet gateway routing for the public subnet; the private subnet has no direct internet route.
+- Reused the CloudTrail trail created in Task 1.
+- Added the AWS Config managed rule `s3-bucket-public-read-prohibited` for S3 buckets.
+- Attempted to activate GuardDuty, but it was unavailable in this account.
+
+## Verification and troubleshooting
+I checked the VPC, subnets, route tables, and AWS Config rule in the console. In PowerShell, `aws sts get-caller-identity` confirmed that the CLI used `temp-user`. The `aws cloudtrail describe-trails` command returned `AccessDeniedException` because this user lacked `cloudtrail:DescribeTrails` permission. I did not count that CLI check as successful.
+
+## Key observations
+The VPC provides a recorded public and private subnet layout for later lab work. CloudTrail was already configured before this phase, so I did not create a duplicate trail. GuardDuty remains an incomplete checklist item.
+
+## Evidence
+- `VPC_Setup.png` — VPC and two subnets.
+- `Route_Tables.png` — public and private routing, if captured.
+- `CloudTrail_Config.png` — existing trail settings, if captured.
+- `Config_Rule.png` — AWS Config rule, if captured.
+- `GuardDuty_Limitation.png` — activation message, if captured.
+
+## Completion status
+- [x] VPC created with public and private subnets
+- [x] CloudTrail previously enabled and reused
+- [x] AWS Config rule added
+- [ ] GuardDuty activated — unavailable in this account
