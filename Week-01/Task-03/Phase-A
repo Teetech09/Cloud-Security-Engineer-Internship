@@ -1,0 +1,50 @@
+# Phase A — Theory and Introduction
+
+Objective
+Understand the security implications of using the AWS CLI, verify the active AWS identity, and explain the differences between IAM user and role authentication and between static and temporary credentials.
+
+Action Taken
+I opened PowerShell and executed:
+
+```powershell
+aws sts get-caller-identity
+```
+
+The command returned `UserId`, `Account`, and `Arn`. I reviewed the ARN and identified the active identity as an IAM user because it contained `:user/`.
+
+Key Observations
+- The AWS CLI successfully authenticated to AWS.
+- The returned ARN identified the IAM user associated with the CLI session.
+- This command confirms identity; it does not list the identity’s permissions.
+- Running PowerShell as a Windows administrator does not increase AWS permissions.
+
+How the AWS CLI Uses Credentials
+The AWS CLI uses credentials to sign requests sent to AWS. AWS authenticates the identity and evaluates applicable policies to determine whether the requested action is permitted. Credentials identify the caller; permissions control what the caller can do.
+
+IAM User vs IAM Role
+An IAM user is an identity within an AWS account and can have long-term access keys. An IAM role is assumed by an authorised identity or service and provides temporary credentials for the session. Both require carefully scoped permissions.
+
+Static vs Temporary Credentials
+
+| Feature | Static Access Keys | Temporary Credentials |
+|---|---|---|
+| Components | Access key ID and secret access key | Access key ID, secret access key, and session token |
+| Expiration | Do not expire automatically | Expire after a defined period |
+| Typical source | IAM user access keys | AWS STS, assumed roles, or federated sessions |
+| Security consideration | Exposed keys can remain usable until revoked | Expiration limits the period of misuse |
+
+The identity command alone does not establish whether the credentials used were static or temporary.
+
+Evidence
+[View identity verification screenshot](./phaseA_identity.png)
+
+Sensitive identifiers are redacted from the public screenshot. Access keys, secret access keys, and session tokens must never be committed to GitHub.
+
+Lessons Learned
+I learned to verify my AWS identity before performing CLI activities. This helps prevent actions under the wrong account or identity. Temporary credentials reduce reliance on long-term keys, while least-privilege permissions limit what compromised credentials can be used to do.
+
+Completion Checklist
+- [x] Executed `aws sts get-caller-identity`.
+- [x] Identified the current identity as an IAM user.
+- [x] Summarized static versus temporary credentials.
+- [x ] Uploaded the redacted screenshot as `phaseA_identity.png`.
