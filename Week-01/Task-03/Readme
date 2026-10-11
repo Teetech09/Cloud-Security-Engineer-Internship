@@ -1,26 +1,25 @@
 # Week 1, Task 03 — AWS CLI Authentication and Security
-
-## Objective
+ Objective
 Understand how the AWS CLI authenticates using IAM credentials, verify the active identity, and compare IAM user and role authentication.
 
-## Progress
+Progress
 - Phase A — In progress
 - Remaining phases — Pending
 
-## Phase A — Theory and Introduction
+ Phase A — Theory and Introduction
 
-### Activities Completed
+ Activities Completed
 - Executed `aws sts get-caller-identity` in PowerShell.
 - Identified the active AWS identity as an IAM user using the returned ARN.
 
-### Key Observation
+ Key Observation
 The command successfully confirmed the identity used by the AWS CLI. AWS permissions are determined by the IAM identity, rather than by running PowerShell as a Windows administrator.
 
-### Static and Temporary Credentials
+Static and Temporary Credentials
 Static access keys remain valid until deactivated or deleted and require secure storage and lifecycle management. Temporary credentials include a session token and expire after a defined period. IAM roles use temporary credentials, reducing reliance on long-term access keys.
 
-### Evidence
+ Evidence
 - `phaseA_identity.png` — Screenshot of the identity verification command and output.
 
-### Security Considerations
+Security Considerations
 Account identifiers should be redacted from public evidence. Access keys, secret access keys, and session tokens must never be uploaded to GitHub.
