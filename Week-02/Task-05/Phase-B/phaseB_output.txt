@@ -1,0 +1,89 @@
+=== Signed-in IAM identity ===
+{
+    "User": {
+        "Path": "/",
+        "UserName": "Cloud-security-lab-admin",
+        "UserId": "AIDA2OTEFHRA653C4XZPT",
+        "Arn": "arn:aws:iam::718543338561:user/Cloud-security-lab-admin",
+        "CreateDate": "2026-09-20T14:24:54+00:00",
+        "PasswordLastUsed": "2026-10-13T10:36:29+00:00"
+    }
+}
+=== Lab user ===
+{
+    "User": {
+        "Path": "/",
+        "UserName": "intern_user",
+        "UserId": "AIDA2OTEFHRA53LR473WA",
+        "Arn": "arn:aws:iam::718543338561:user/intern_user",
+        "CreateDate": "2026-10-13T12:21:05+00:00"
+    }
+}
+=== Group membership ===
+{
+    "Users": [
+        {
+            "Path": "/",
+            "UserName": "intern_user",
+            "UserId": "AIDA2OTEFHRA53LR473WA",
+            "Arn": "arn:aws:iam::718543338561:user/intern_user",
+            "CreateDate": "2026-10-13T12:21:05+00:00"
+        }
+    ],
+    "Group": {
+        "Path": "/",
+        "GroupName": "intern_group",
+        "GroupId": "AGPA2OTEFHRAX45IWVPEA",
+        "Arn": "arn:aws:iam::718543338561:group/intern_group",
+        "CreateDate": "2026-10-13T12:24:01+00:00"
+    }
+}
+=== Attached group policies ===
+{
+    "AttachedPolicies": [
+        {
+            "PolicyName": "AmazonS3ReadOnlyAccess",
+            "PolicyArn": "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+        }
+    ]
+}
+=== Role and trust policy ===
+{
+    "Role": {
+        "Path": "/",
+        "RoleName": "intern_role",
+        "RoleId": "AROA2OTEFHRAZQVMV4TX7",
+        "Arn": "arn:aws:iam::718543338561:role/intern_role",
+        "CreateDate": "2026-10-13T12:28:55+00:00",
+        "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Principal": {
+                        "Service": "ec2.amazonaws.com"
+                    },
+                    "Action": "sts:AssumeRole"
+                }
+            ]
+        },
+        "Description": "EC2 service role for Week 2 Task 5 IAM lab.",
+        "MaxSessionDuration": 3600,
+        "RoleLastUsed": {}
+    }
+}
+=== Role inline policy ===
+{
+    "RoleName": "intern_role",
+    "PolicyName": "DescribeInstancesOnly",
+    "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Action": "ec2:DescribeInstances",
+                "Resource": "*"
+            }
+        ]
+    }
+}
