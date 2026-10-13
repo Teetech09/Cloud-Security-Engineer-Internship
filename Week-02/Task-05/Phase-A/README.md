@@ -45,7 +45,7 @@ I tested the following actions:
 | s3:PutObject | Allowed |
 | s3:DeleteObject | Allowed |
 | s3:DeleteBucket | Allowed |
-| ec2:DescribeInstances | [Enter the result shown in your simulator] |
+| ec2:DescribeInstances |Denied |
 
 The EC2 action was tested against the same S3 policy without adding EC2 permissions.
 
@@ -67,10 +67,10 @@ Security Risks
 Recommendation
 Replace broad S3 permissions with the specific actions required for a task. Scope permissions to the necessary bucket and object ARNs wherever the actions support resource-level permissions.
 
-Some actions, such as `s3:ListAllMyBuckets`, require `"Resource": "*"`; this should be assessed separately rather than treating every resource wildcard as a misconfiguration.
+Some actions, such as `s3:ListAllMyBuckets`, require `"Resource": "*"`; assess these separately rather than treating every resource wildcard as a misconfiguration.
 
 Troubleshooting
-I initially selected the test actions inside the policy editor, which replaced `s3:*` with specific actions. I restored the wildcard policy, saved it, returned to the simulator and added the actions under the simulation controls.
+I initially selected the test actions inside the policy editor, which replaced `s3:*` with specific actions. I restored the wildcard policy, saved it, returned to the simulator, and added the actions under the simulation controls.
 
 Lessons Learned
 I learned to distinguish the permissions written in a policy from the actions selected for testing. The results demonstrated that a policy can allow broad access within one service while providing no permissions for another service.
