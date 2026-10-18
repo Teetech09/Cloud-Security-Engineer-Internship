@@ -1,0 +1,5 @@
+| Risk | Business assets affected | Potential business impact |
+|---|---|---|
+| Broad role-passing and instance-profile permissions | EC2 workloads and resources accessible through passed roles | A compromised Kerrigan identity could potentially obtain greater access through EC2. |
+| Mighty role allows all actions on all resources | Account data, infrastructure, and security controls | Misuse of the role could expose data, alter resources, or disrupt services. |
+| Reliance on external-access findings alone | IAM security monitoring and assurance | Same-account escalation risks could remain undetected, delaying remediation. |
