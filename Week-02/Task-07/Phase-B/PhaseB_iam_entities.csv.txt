@@ -1,0 +1,31 @@
+python - <<'PY'
+import csv
+import json
+import subprocess
+
+def aws_json(*args):
+    result = subprocess.run(
+        ["aws", *args, "--output", "json", "--no-cli-pager"],
+        check=True, capture_output=True, text=True
+    )
+    return json.loads(result.stdout)
+
+user = aws_json("iam", "get-user", "--user-name", "kerrigan")["User"]
+
+role_names = [
+    "cg-ec2-meek-role-cgidj957m3fp3j",
+    "cg-ec2-mighty-role-cgidj957m3fp3j",
+]
+
+rows = [("User", user["UserName"], user["Arn"])]
+for name in role_names:
+    role = aws_json("iam", "get-role", "--role-name", name)["Role"]
+    rows.append(("Role", role["RoleName"], role["Arn"]))
+
+with open("iam_entities.csv", "w", newline="") as file:
+    writer = csv.writer(file)
+    writer.writerow(["EntityType", "EntityName", "Arn"])
+    writer.writerows(rows)
+
+print("Created iam_entities.csv with 1 user and 2 roles.")
+PY
