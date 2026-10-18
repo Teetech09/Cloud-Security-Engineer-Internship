@@ -1,0 +1,59 @@
+Week 2, Task 07 — Phase A: IAM Enumeration Fundamentals
+
+Objective
+Understand IAM entity relationships, enumeration commands, and how
+misconfigurations can create privilege escalation opportunities.
+
+IAM Entity Relationships
+IAM users can receive permissions directly or through IAM groups.
+Roles provide temporary credentials when assumed by trusted principals.
+A role's trust policy defines who can assume it, while its permissions
+policies define the actions it can perform. Managed policies are separate,
+reusable policies; inline policies belong to a specific user, group,
+or role. Permissions boundaries limit permissions but do not grant them.
+
+Commands Executed
+1. aws iam list-users
+   Listed IAM users, including administrative, development, and
+   lab-related identities.
+
+2. aws iam list-policies --scope Local
+   Listed customer managed policies, including policies with names
+   suggesting privilege escalation exercises. Policy names alone do
+   not confirm exploitable permissions.
+
+3. aws iam list-roles
+   Listed service-linked roles and custom lab roles.
+
+4. aws iam get-role --role-name intern_role
+   Confirmed that intern_role trusts the EC2 service through
+   sts:AssumeRole. The role has the InternLabRestrictAdminBoundary
+   permissions boundary applied. No last-used information was returned.
+
+How Enumeration Supports Privilege Escalation Analysis
+Enumeration helps identify identities, policies, and trust relationships
+for further review. An attacker with sufficient access could use this
+information to look for overly broad policy-management permissions,
+unsafe role trust, or permissions to pass powerful roles to services.
+The commands executed were read-only and did not themselves change
+permissions. No exploitable privilege escalation path was confirmed
+from these outputs alone.
+
+Explicit Allow, Implicit Deny, and Explicit Deny
+Explicit allow: A matching Allow statement grants permission, subject
+to other applicable policy controls.
+Implicit deny: Access is denied because the applicable policies do
+not provide the required permission.
+Explicit deny: A matching Deny statement blocks an action and overrides
+an Allow statement.
+
+Key Learning
+Trust and permissions must be reviewed separately. A permissions
+boundary does not grant access, and its name does not prove which
+actions it restricts. Policy documents and applicable controls must
+be examined before concluding that an identity has excessive access.
+
+Evidence
+- phaseA_list_users.png
+- phaseA_list_policies.png
+- phaseA_get_role.png
