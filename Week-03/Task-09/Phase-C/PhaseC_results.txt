@@ -1,0 +1,13 @@
+PS C:\Users\yusuf\OneDrive\Documents\CyberSecurity\Week 03, Task 09\Evidence_YNT> aws s3 cp PhaseC_confidential.txt s3://student-s3-lab-teetech-20261020/confidential.txt --profile s3tester
+upload: .\PhaseC_confidential.txt to s3://student-s3-lab-teetech-20261020/confidential.txt
+PS C:\Users\yusuf\OneDrive\Documents\CyberSecurity\Week 03, Task 09\Evidence_YNT> aws s3 ls s3://student-s3-lab-teetech-20261020 --profile s3tester
+2026-10-20 13:14:11         85 confidential.txt
+PS C:\Users\yusuf\OneDrive\Documents\CyberSecurity\Week 03, Task 09\Evidence_YNT> aws s3 cp s3://student-s3-lab-teetech-20261020/confidential.txt downloaded-confidential.txt --profile s3tester
+download: s3://student-s3-lab-teetech-20261020/confidential.txt to .\downloaded-confidential.txt
+PS C:\Users\yusuf\OneDrive\Documents\CyberSecurity\Week 03, Task 09\Evidence_YNT>
+2026-10-20 13:14:11         85 confidential.txt
+PS C:\Users\yusuf\OneDrive\Documents\CyberSecurity\Week 03, Task 09\Evidence_YNT> aws s3 cp s3://student-s3-lab-teetech-20261020/confidential.txt downloaded-confidential.txt --profile s3tester
+download: s3://student-s3-lab-teetech-20261020/confidential.txt to .\downloaded-coaws s3api get-object --bucket student-s3-lab-teetech-20261020 --key confidential.txt anonymous-test.txt --no-sign-requestsuf\OneDrive\Documents\CyberSecurity\Week 03, Task 09\Evidence_YNT>
+
+aws: [ERROR]: An error occurred (AccessDenied) when calling the GetObject operation: Access Denied
+PS C:\Users\yusuf\OneDrive\Documents\CyberSecurity\Week 03, Task 09\Evidence_YNT>
