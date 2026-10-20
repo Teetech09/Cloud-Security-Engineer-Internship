@@ -1,0 +1,4 @@
+Phase D: S3 Public Exposure Risk Matrix.
+| Asset | Threat / Misconfiguration | Impact | Likelihood | Mitigation |
+|---|---|---|---|---|
+| S3 bucket data | Public-read policy combined with relaxed Block Public Access settings permits anonymous object downloads. | **High** if sensitive data is exposed; the test used harmless dummy data. | **Medium** — qualitative assessment for the simulated scenario. | Enforce Block Public Access, remove public policy grants, apply least privilege and monitor policy changes. Use SSE-S3 or SSE-KMS for encryption at rest. |
