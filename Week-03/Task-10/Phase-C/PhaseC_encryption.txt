@@ -1,0 +1,10 @@
+PS C:\Users\yusuf> "Simulated confidential data for Task 10 encryption testing." | Set-Content .\confidential.txt
+PS C:\Users\yusuf> aws s3 cp .\confidential.txt s3://secure-s3-lab-teetech-20261021/confidential.txt --sse aws:kms --sse-kms-key-id alias/S3LabKey --region us-east-1 --profile personal-sandbox
+upload: .\confidential.txt to s3://secure-s3-lab-teetech-20261021/confidential.txt
+PS C:\Users\yusuf> aws s3api head-object --bucket secure-s3-lab-teetech-20261021 --key confidential.txt --region us-east-1 --profile personal-sandbox --query "{Encryption:ServerSideEncryption,KMSKey:SSEKMSKeyId}" --output json
+{
+    "Encryption": "aws:kms",
+    "KMSKey": "arn:aws:kms:us-east-1:718543338561:key/b512af0c-d805-42e7-922c-ddafc55b45d5"
+}
+
+PS C:\Users\yusuf>
