@@ -41,7 +41,7 @@ Steps performed
  Result
 Bucket created by CloudGoat: `cg-cardholder-data-bucket-cgidy6z70iw9n5`
 
-![S3 bucket listing](phaseB_s3_list.png)
+![S3 bucket listing](phaseB_s3_lists.png), PhaseB_Cloudgoat_Installed.
 
 Completion checklist
 - [x] CloudGoat deployed successfully
@@ -54,9 +54,7 @@ Challenges and fixes
 - **Scenario name:** `s3_buckets` was not available, so I used `cloud_breach_s3`.
 
  Cleanup
-- [ ] Ran `cloudgoat destroy cloud_breach_s3`
-- [ ] Confirmed the bucket is gone with `aws s3 ls`
-- [ ] Deleted the lab IAM user's access key
+- [x] Ran `cloudgoat destroy cloud_breach_s3`
+- [x] Confirmed the bucket is gone with `aws s3 ls`
+- [x] Deleted the lab IAM user's access key
 
-Key takeaway
-what this scenario shows about how S3 misconfigurations expose sensitive data, and why least privilege and bucket policies matter.]
