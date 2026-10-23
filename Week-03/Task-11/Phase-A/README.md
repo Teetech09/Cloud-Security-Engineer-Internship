@@ -34,7 +34,7 @@ Key Observation (Phase A)
 
 Evidence Produced
 
-- `phaseA_policy_analysis.png`: screenshot of the AI assistant's explanation of the sample bucket policy and what `"Principal": "*"` implies.
+- `phaseA_policy_analysis.doc`: screenshot of the AI assistant's explanation of the sample bucket policy and what `"Principal": "*"` implies.
 
 [Policy analysis](phaseA_policy_analysis.png)
 
