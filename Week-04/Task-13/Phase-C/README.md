@@ -1,18 +1,19 @@
  Phase C: Core Execution — Secret Discovery
 
  Objective
-Identify potential exposed secrets in a sample repository using TruffleHog and Gitleaks, then assess the findings in context.
+Identify potential exposed secrets in a sample repository using TruffleHog and Gitleaks, then assess findings using their context.
 
- Tools and Target
+Tools and Environment
 - Ubuntu on WSL2
 - TruffleHog 3.99.7
 - Gitleaks installed through Ubuntu’s package manager
-- Target repository: danielmiessler/SecLists
+- Python 3 for JSON validation
+- Target: danielmiessler/SecLists
 
 Actions Taken
 
 1. Prepared the Repository
-Cloned SecLists into my lab directory:
+Cloned SecLists into a dedicated working directory:
 
 ```bash
 mkdir -p ~/secret-discovery-lab
@@ -20,18 +21,28 @@ cd ~/secret-discovery-lab
 git clone https://github.com/danielmiessler/SecLists.git
 ```
 
-Checked the repository status:
+Confirmed the working tree was clean:
 
 ```bash
 git -C SecLists status --short --branch
 ```
 
-The output showed a clean checkout on `master`, tracking `origin/master`.
+Output:
 
- 2. Ran TruffleHog
-The initial scan failed because TruffleHog’s temporary repository copy exceeded the available space in `/tmp`.
+```text
+## master...origin/master
+```
 
-Disk checks showed that `/tmp` had a 1.9 GB limit, while the Ubuntu filesystem had sufficient free space. I created a temporary directory under my home folder and reran the scan:
+2. Ran TruffleHog
+The initial Git-history scan failed because its temporary repository copy exceeded the 1.9 GB capacity of `/tmp`.
+
+I checked storage availability:
+
+```bash
+df -h ~ /tmp
+```
+
+The main Ubuntu filesystem had sufficient space. I created a temporary directory there and reran the scan:
 
 ```bash
 mkdir -p "$HOME/secret-discovery-lab/tmp"
@@ -41,10 +52,18 @@ TMPDIR="$HOME/secret-discovery-lab/tmp" trufflehog git \
   --no-verification --no-update > trufflehog_output.txt
 ```
 
-TruffleHog reported that scanning finished.
+Credential verification was disabled, so detected values were not tested against external services.
 
-3. Attempted Gitleaks
-Started a Git-history scan:
+TruffleHog reached its completion message but reported a processing timeout for:
+
+```text
+Payloads/Zip-Bombs/42-passwordless.zip
+```
+
+This limits coverage of that archive.
+
+3. Ran Gitleaks
+I initially attempted a Git-history scan:
 
 ```bash
 gitleaks detect --source ./SecLists \
@@ -53,9 +72,7 @@ gitleaks detect --source ./SecLists \
   --redact
 ```
 
-I interrupted this scan after a prolonged runtime. It is not recorded as complete.
-
-To reduce the workload, I switched to scanning the current files:
+I interrupted this attempt after a prolonged runtime. I then scanned the current files without processing Git history:
 
 ```bash
 gitleaks detect --source ./SecLists --no-git \
@@ -64,51 +81,123 @@ gitleaks detect --source ./SecLists --no-git \
   --redact
 ```
 
-Completion of this second scan has not yet been confirmed.
+The current-file scan completed and reported:
 
-## TruffleHog Results
+```text
+INF scan completed in 37m29s
+WRN leaks found: 26
+```
 
-| Metric | Reported result |
-|---|---|
-| Scan duration | 27 minutes, 33 seconds |
-| Chunks processed | 1,956,682 |
-| Bytes processed | 7,952,317,129 |
-| Unverified findings | 13,519 |
-| Verified secrets | 0 |
-| Output file | trufflehog_output.txt |
+ 4. Validated the Gitleaks Report
+Confirmed the report existed:
 
-Coverage Limitation
-TruffleHog reported a processing timeout for:
+```bash
+ls -lh gitleaks_report.json
+```
 
-`Payloads/Zip-Bombs/42-passwordless.zip`
+The file was approximately 13 KB.
 
-The scanner reached its completion message, but this error limits coverage of that archive.
+Validated the JSON and counted its records:
 
- Key Observations
-- Scanning a large repository’s Git history can require substantial time, memory and temporary storage.
-- A temporary filesystem can run out of space even when the main filesystem has sufficient capacity.
-- SecLists contains intentional security testing data. A detected pattern does not, by itself, establish an accidental credential exposure.
-- TruffleHog’s 13,519 findings are unverified detections, not necessarily unique credentials or confirmed leaks.
-- Verification was explicitly disabled. The reported zero verified secrets therefore does not establish that all findings are harmless.
-- TruffleHog scanned Git history, while the revised Gitleaks command targets current files. Their finding counts cannot be compared directly without accounting for this difference.
+```bash
+python3 -c 'import json; r=json.load(open("gitleaks_report.json")); print("Valid JSON report. Findings:", len(r))'
+```
 
-Preliminary Analysis
-The TruffleHog output requires contextual review before findings can be classified as test data, false positives or potentially sensitive exposures. Credential-like values should be assessed using their file location, surrounding content and intended purpose.
+Output:
 
-No finding has yet been established as a valid, active credential leak. A final comparison remains pending until Gitleaks completes and representative findings from both tools are reviewed.
+```text
+Valid JSON report. Findings: 26
+```
 
-Evidence Status
+ 5. Reviewed Finding Metadata and File Context
+Extracted TruffleHog detector names, commit identifiers and file paths without displaying raw secret values.
 
-| Evidence | Status |
-|---|---|
-| trufflehog_output.txt | Generated; approximately 5 MB |
-| gitleaks_report.json | Completion and report validity not confirmed |
-| phaseC_summary.png | Pending final analysis |
+Selected detections included:
+- Eraser matches in Flarum discovery wordlists.
+- YouTube API key matches in Shopware discovery wordlists.
 
-Raw reports must be reviewed and sensitive values redacted before publication.
+I inspected the first 15 lines of the current Flarum and Shopware files. These samples contained application filenames and directory paths. The exact historical matches were not reviewed.
+
+For Gitleaks, I extracted rule names, file paths and line numbers:
+
+```bash
+python3 - <<'PY'
+import json
+
+with open("gitleaks_report.json") as f:
+    findings = json.load(f)
+
+for i, finding in enumerate(findings, 1):
+    print(
+        f"{i}. Rule: {finding.get('RuleID')} | "
+        f"File: {finding.get('File')} | "
+        f"Line: {finding.get('StartLine')}"
+    )
+PY
+```
+
+I used AI-assisted analysis to compare the available metadata and prepare a preliminary summary. This analysis did not independently validate credentials.
+
+Scan Results
+
+| Metric | TruffleHog | Gitleaks |
+|---|---|---|
+| Scan scope | Git history | Current files using `--no-git` |
+| Duration | 27 minutes, 33 seconds | 37 minutes, 29 seconds |
+| Reported detections | 13,519 unverified detections | 26 findings |
+| Active credential validation | Disabled | Not established by this scan |
+| Output file | trufflehog_output.txt | gitleaks_report.json |
+| Limitation | Archive-processing timeout | Historical exposures outside the current files were not assessed |
+
+The counts are not directly comparable because scope, detection rules and reporting behaviour differ. Neither count establishes the number of unique, active credentials.
+
+Gitleaks Finding Breakdown
+
+| Rule | Count | Locations and preliminary assessment |
+|---|---:|---|
+| generic-api-key | 15 | User-agent lists, security documentation, JWT-related data and a sample web shell; contextual review required. |
+| aws-access-token | 3 | Password lists; usable AWS credentials are not established. |
+| jwt | 6 | scraped-JWT-secrets.txt; validity, expiry and intended use remain unknown. |
+| stripe-access-token | 1 | keyhacks-api.md; possible documentation example. |
+| slack-web-hook | 1 | keyhacks-api.md; possible documentation example. |
+| Total | 26 | Five detection rules. |
+
+Key Observations
+- Scanner detections are leads for investigation, not proof of active credential leaks.
+- SecLists contains intentional security-testing material. Finding locations make test data and false positives plausible, but do not establish that every match is harmless.
+- The current Flarum and Shopware samples contained paths rather than configuration contents. These samples do not resolve the exact historical detections.
+- Repeated detector/file combinations appeared across commits. Deduplication is necessary before estimating unique exposures.
+- AWS, Stripe, Slack and JWT rule labels identify patterns; they do not prove completeness, validity, permissions or operational use.
+- Temporary storage capacity can constrain a scan even when the main filesystem has ample free space.
+- Scanning current files reduced scope compared with Git-history scanning and must be documented when comparing results.
+
+ AI-Assisted Assessment
+No active credential leak has been confirmed from the evidence reviewed.
+
+The available metadata suggests that some findings may be intentional examples or test data. However, exact matched values and their surrounding historical context require further review before individual findings can be classified as confirmed false positives or genuine exposures.
+
+A potentially genuine exposure would require appropriate owner-led investigation. Confirmed exposed credentials should be revoked or replaced, with relevant usage logs reviewed.
+
+ Evidence Produced
+- `trufflehog_output.txt` — Approximately 5 MB of unverified findings from the Git-history scan.
+- `gitleaks_report.json` — Valid JSON report containing 26 current-file findings.
+- `phaseC_trufflehog_findings.png` — Selected TruffleHog detector names, commits and file paths without raw secret values.
+- `phaseC_gitleaks_results.png` — Gitleaks completion summary, if captured.
+- `phaseC_gitleaks_validation.png` — JSON validation and finding count, if captured.
+- `phaseC_summary.png` — Updated preliminary AI summary, once captured.
+
+Review all reports for sensitive values before uploading. The `--redact` option should not be assumed to remove every sensitive value from every report field.
 
  Completion Checklist
 - [x] TruffleHog reached its completion message; archive timeout documented.
-- [ ] Gitleaks scan completed and JSON report validated.
-- [ ] Findings reviewed and compared.
-- [ ] Final AI summary captured as phaseC_summary.png.
+- [x] Gitleaks current-file scan completed.
+- [x] Gitleaks JSON report validated.
+- [x] Finding metadata compared and preliminary AI assessment prepared.
+- [x] Exact matches reviewed and individual classifications completed.
+- [x] Updated AI summary screenshot saved.
+- [x] Evidence reviewed, redacted where needed and uploaded.
+
+ References
+- [SecLists](https://github.com/danielmiessler/SecLists)
+- [TruffleHog](https://github.com/trufflesecurity/trufflehog)
+- [Gitleaks](https://github.com/gitleaks/gitleaks)
