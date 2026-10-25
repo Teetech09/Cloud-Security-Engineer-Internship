@@ -1,0 +1,8 @@
+Phase C: AI-Assisted Findings Summary
+TruffleHog reported 13,519 unverified detections across SecLists Git history, while Gitleaks reported 26 findings from current files. The Gitleaks JSON report was successfully validated. These counts are not directly comparable because scan scope and detection methods differed.
+
+Gitleaks findings occurred mainly in user-agent collections, password lists and security-testing documentation. These locations support treating intentional test data and false positives as plausible explanations. However, exact matched values and their surrounding context have not been reviewed, so individual findings remain unverified.
+
+The AWS, Stripe, Slack and JWT rule matches warrant contextual review because they resemble credential formats. A detector label does not establish that a credential is complete, active or capable of accessing a service.
+
+No active credential leak has been confirmed. Next steps are to review exact matches locally, distinguish examples from potentially sensitive values, deduplicate repeated content and redact reports before publication.
