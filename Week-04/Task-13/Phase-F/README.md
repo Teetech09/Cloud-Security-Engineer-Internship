@@ -9,7 +9,7 @@ Hands-on assessment of how secrets are created, stored, exposed, and revoked in 
 | C | Secret discovery with TruffleHog and GitLeaks on SecLists | phaseC_summary.png |
 | D | Secret lifecycle analysis and mitigations | Phase-D/README.md |
 | E | PwnedLabs: Hunt for Secrets in Git Repos; Uncover Secrets in CodeCommit and Docker | phaseE_lab1.png, phaseE_lab2.png |
-| F | Executive report | Phase-F/ |
+| F | Executive report | PhaseF_CSE_AWS_L_013_04_20261026
 
 Key takeaway
 Deleting a secret from the latest commit does not remove it from history or image layers, and without rotation it stays valid.
