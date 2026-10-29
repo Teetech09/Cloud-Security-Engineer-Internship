@@ -1,0 +1,9 @@
+cat > phaseC_findings.txt <<'EOF'
+Scan target: local demo repo seeded with the CloudGoat iam_privesc_by_key_rotation manager key
+Tools: TruffleHog 3.99.7 (git history scan), Gitleaks 8.30.1 (JSON report)
+Finding: AWS access key in .env, first commit; .env removed in the next commit but still in history
+TruffleHog result: 1 verified secret, 0 unverified
+Gitleaks result: 1 leak found in the initial commit
+Validation: aws sts get-caller-identity --profile test_leak returned user manager_cgidndh53tyxvd
+Status: COMPROMISED, to be rotated in Phase D
+EOF
