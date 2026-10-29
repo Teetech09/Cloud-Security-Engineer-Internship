@@ -21,4 +21,5 @@ The validation step returned the identity of the `manager` IAM user, which confi
 Evidence Produced
 *PhaseC_validation.png: Screenshot of `aws sts get-caller-identity --profile test_leak` returning the identity of the IAM user `manager_cgidndh53tyxvd`, with the account and user IDs masked.
 *PhaseC_jq_extract.png: Screenshot of the jq extraction from the Gitleaks report, showing the rule `aws-access-token`, the file `.env`, the line number and commit, with the secret truncated.
-* PhaseC_findings.txt: Summary of the scan results, the validation outcome and the compromised status of the key.
+* PhaseC_findings.txt: Summary of the scan results, the validation outcome, and the compromised status of the key.
+* PhaseC_gitleaks_report.json: Gitleaks JSON report for the demo repository, with the secret and match values redacted before publishing.
