@@ -1,4 +1,4 @@
-Phase B: Setup Homelab / Target Environment
+Phase B: Set up Homelab / Target Environment
 
 Objective
 This phase aimed to deploy a simple Python Lambda function triggered by an S3 bucket event using the AWS Free Tier, and configure it with a least-privilege execution role.
@@ -16,6 +16,12 @@ Scoping the invoke permission to a specific bucket and account prevents other bu
 I ran into a few practical issues. The default WSL distribution was `docker-desktop`, which has no AWS CLI, and `aws login` did not complete in my Ubuntu environment. I resolved this by running the commands in AWS CloudShell, which uses the console session's credentials. The CLI pager also captured some pasted commands, which I fixed by setting `AWS_PAGER=""` and then verifying that both policies were attached to the role.
 
 Evidence Produced
-phaseB_lambda_setup.png is a screenshot of the `SecureLambdaDemo` function configuration showing the S3 trigger and the `LambdaExecRole` execution role.
 
-![Lambda function configuration](phaseB_lambda_setup.png,phaseB_test_log.png)
+ PhaseB_lambda_setup.png: screenshot of the `SecureLambdaDemo` function configuration, showing the S3 trigger and the `LambdaExecRole` execution role.
+ PhaseB_test_log.png: CloudShell output of `aws logs tail`, showing the function was triggered by a test upload and logged `New object created: s3://lambda-security-lab-titilayo/test.txt`.
+
+![Lambda function configuration](phaseB_lambda_setup.png)
+
+![Test invocation log](phaseB_test_log.png)
+
+
