@@ -1,4 +1,4 @@
-# Week 1, Task 03 — AWS CLI Authentication and Security
+Task 03 — AWS CLI Authentication and Security
  Objective
 Understand how the AWS CLI authenticates using IAM credentials, verify the active identity, and compare IAM user and role authentication.
 
