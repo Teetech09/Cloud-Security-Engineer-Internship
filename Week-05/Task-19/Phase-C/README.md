@@ -1,9 +1,11 @@
 Phase C: Core Execution & Security Analysis
 
  Objective
+ 
 The objective of this phase was to analyze how permissions propagate when an S3 event invokes a Lambda function, and to identify the impact of an over-permissive execution role by observing the behavior in CloudWatch Logs and CloudTrail.
 
 Actions Taken
+
 To make permission changes visible, I updated `SecureLambdaDemo` so that for each S3 event it logs the object key and then attempts three actions using its execution role: reading the triggering object (`s3:GetObject`), listing all buckets in the account (`s3:ListAllMyBuckets`), and deleting the triggering object (`s3:DeleteObject`). Each attempt is logged as `ALLOWED` or `DENIED`. The function only logs counts and status codes, never object contents or bucket names, and it never writes to the bucket, so it cannot re-trigger itself.
 
 I ran the test in three stages:
@@ -28,9 +30,11 @@ In the over-permission stage, `after.txt` was deleted by the function itself, wh
 CloudTrail confirmed the same pattern. The `ListBuckets` events were recorded under `assumed-role/LambdaExecRole/SecureLambdaDemo`, showing the function acting through temporary credentials. They show `AccessDenied` at the baseline and after the revert, and `Success` during the over-permission window, matching the CloudWatch logs to the second. CloudTrail also recorded the `PutRolePolicy` and `DeleteRolePolicy` calls that added and removed the temporary policy. S3 object-level actions such as `GetObject` and `DeleteObject` do not appear in CloudTrail Event history because they are data events, which are not logged unless a trail with data events enabled is configured.
 
 Misconfigurations and Mitigations
+
 The misconfiguration tested here is a wildcard policy (`s3:*` on `*`) on a function execution role. It is dangerous because Lambda functions process events that can contain attacker-influenced data, so any code flaw in the function inherits everything the role allows.
 
 Mitigations identified during this phase:
+
 - Apply least privilege to every execution role, naming specific actions and specific resource ARNs rather than wildcards.
 - Scope the resource-based invoke permission with `SourceArn` and `SourceAccount` so only the intended bucket can trigger the function.
 - Use IAM Access Analyzer to review policies and flag overly broad access.
