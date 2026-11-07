@@ -1,0 +1,93 @@
+[
+  {
+    "RoleName": "RotateAppDBCredentials-role-gw4wa8y7",
+    "Arn": "arn:aws:iam::<account-id>:role/service-role/RotateAppDBCredentials-role-gw4wa8y7",
+    "TrustPolicy": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Principal": {
+            "Service": "lambda.amazonaws.com"
+          },
+          "Action": "sts:AssumeRole"
+        }
+      ]
+    },
+    "AttachedPolicies": [
+      {
+        "PolicyName": "AWSLambdaBasicExecutionRole-28c06c89-0394-4e4f-b64a-94f3c6968413",
+        "PolicyArn": "arn:aws:iam::<account-id>:policy/service-role/AWSLambdaBasicExecutionRole-28c06c89-0394-4e4f-b64a-94f3c6968413"
+      }
+    ],
+    "InlinePolicyNames": [
+      "RotationSecretAccess"
+    ]
+  },
+  {
+    "RoleName": "LambdaSecretAccessRole",
+    "Arn": "arn:aws:iam::<account-id>:role/LambdaSecretAccessRole",
+    "TrustPolicy": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Principal": {
+            "Service": "lambda.amazonaws.com"
+          },
+          "Action": "sts:AssumeRole"
+        }
+      ]
+    },
+    "AttachedPolicies": [],
+    "InlinePolicyNames": [
+      "ReadAppDBCredentialsSecret"
+    ]
+  },
+  {
+    "RoleName": "cg-debug-role-cgidq2ixgy1cx7",
+    "Arn": "arn:aws:iam::<account-id>:role/cg-debug-role-cgidq2ixgy1cx7",
+    "TrustPolicy": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Principal": {
+            "Service": "lambda.amazonaws.com"
+          },
+          "Action": "sts:AssumeRole"
+        }
+      ]
+    },
+    "AttachedPolicies": [
+      {
+        "PolicyName": "AdministratorAccess",
+        "PolicyArn": "arn:aws:iam::aws:policy/AdministratorAccess"
+      }
+    ],
+    "InlinePolicyNames": []
+  },
+  {
+    "RoleName": "cg-lambdaManager-role-cgidq2ixgy1cx7",
+    "Arn": "arn:aws:iam::<account-id>:role/cg-lambdaManager-role-cgidq2ixgy1cx7",
+    "TrustPolicy": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Principal": {
+            "AWS": "arn:aws:iam::<account-id>:user/chris-cgidq2ixgy1cx7"
+          },
+          "Action": "sts:AssumeRole"
+        }
+      ]
+    },
+    "AttachedPolicies": [
+      {
+        "PolicyName": "cg-lambdaManager-policy-cgidq2ixgy1cx7",
+        "PolicyArn": "arn:aws:iam::<account-id>:policy/cg-lambdaManager-policy-cgidq2ixgy1cx7"
+      }
+    ],
+    "InlinePolicyNames": []
+  }
+]

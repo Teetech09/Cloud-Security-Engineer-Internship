@@ -1,0 +1,10 @@
+[
+  {
+    "FunctionName": "RotateAppDBCredentials",
+    "EnvironmentVariables": null
+  },
+  {
+    "FunctionName": "RetrieveSecretFunction",
+    "EnvironmentVariables": null
+  }
+]
