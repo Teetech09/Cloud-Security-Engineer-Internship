@@ -17,6 +17,48 @@ Objectives
 - Correlate successful SSH logins with observed IP addresses.
 - Assess potential post-compromise activity.
 
+Actions Taken
+
+1. Accessed the PwnedLabs **Investigate Threats with Amazon Detective** lab environment and examined the available AWS security resources in the `us-west-1` region.
+
+2. Opened Amazon GuardDuty and reviewed the SSH brute-force finding:
+   - Finding type: `UnauthorizedAccess:EC2/SSHBruteForce`
+   - Affected EC2 instance: `i-0f9368c3dc7714c42`
+   - Source IP: `44.219.62.158`
+   - Destination port: `22 (SSH)`
+
+3. Opened Amazon Detective and investigated the affected EC2 instance, its associated IP addresses, IAM user, IAM role, and related finding groups.
+
+4. Examined the EC2 instance's Overview, Resource interaction, and VPC Flow information to understand its observed network activity and associated IP address assignments.
+
+5. Investigated suspicious IP addresses, including `44.219.62.158`, `98.159.226.88`, and `98.159.226.95`, and compared their observed activity with the authentication log timestamps.
+
+6. Downloaded and examined the provided Linux `auth.log` archive. Reviewed authentication records for failed and successful SSH login attempts involving the `backupuser` and `ubuntu` accounts.
+
+7. Identified successful SSH authentication events and correlated their timestamps with the IP addresses observed in Amazon Detective.
+
+8. Adjusted the Amazon Detective investigation scope to 3 September 2023, 21:36–22:41 UTC, to focus on the period containing the identified successful SSH logins.
+
+9. Reviewed the available evidence and documented the investigation findings, limitations, and flag retrieval status.
+
+Key Observations
+
+The investigation revealed that the affected EC2 instance experienced repeated SSH authentication failures targeting the `backupuser` account. The authentication log contained 2,558 failed password authentication entries, followed by multiple successful SSH logins from external IP addresses.
+
+The successful login events were particularly significant because they demonstrated that the activity went beyond unsuccessful authentication attempts:
+
+- `44.219.62.158` successfully authenticated as `backupuser` at 21:36:04 UTC.
+- `98.159.226.88` successfully authenticated as `backupuser` at 21:45:38 UTC.
+- `98.159.226.95` successfully authenticated as `backupuser` at 21:51:00 UTC.
+- `98.159.226.95` later authenticated as `ubuntu` using a public key at 22:20:34 UTC.
+
+The correlation between the authentication log and Detective's IP address observations provided useful evidence for reconstructing the incident timeline.
+
+One important lesson was that a GuardDuty SSH brute-force finding alone does not establish successful compromise. Reviewing operating-system authentication logs provided stronger evidence of successful access.
+
+Although Amazon Detective helped establish relationships between AWS resources and network entities, the available investigation data did not fully establish what actions were performed after authentication or whether sensitive information was accessed or exfiltrated.
+
+Investigation outcome: Suspicious SSH activity and successful external authentication were identified. However, I was unable to establish the complete post-compromise activity chain or retrieve the lab flag. Further investigation of system processes, shell history, outbound connections, IAM activity, and S3 access would be necessary to determine the full impact.
 Tools and Technologies
 
 - Amazon GuardDuty
@@ -27,7 +69,7 @@ Tools and Technologies
 - Linux Authentication Logs (`auth.log`)
 - PwnedLabs Cybersecurity Lab
 
-Investigation and Actions Taken
+
 
 GuardDuty Finding Analysis
 
@@ -79,7 +121,7 @@ Status: Not Retrieved
 
 I was unable to identify or retrieve a flag during this investigation. The available evidence supported the identification of suspicious SSH activity and successful authentication, but the investigation did not establish a complete post-compromise activity chain leading to a flag.
 
-## 7. Limitations and Further Investigation
+ Limitations and Further Investigation
 
 Further investigation would be required to establish the full impact of the suspicious access, including:
 
@@ -100,13 +142,7 @@ This exercise strengthened my practical understanding of:
 - Distinguishing suspicious authentication attempts from confirmed successful access.
 - Documenting investigation findings and limitations accurately.
 
-Evidence
 
-Screenshots and supporting evidence are stored in the `Evidence` directory.
-
-- PwnedLabs lab completion screenshot.
-- Amazon Detective investigation screenshots.
-- Investigation findings and authentication log evidence.
 
  Conclusion
 
