@@ -107,7 +107,7 @@ Reviewed the provided `auth.log` file and identified:
 
 These events provided evidence that SSH authentication was successful from multiple external IP addresses.
 
-5. Key Findings
+Key Findings
 
 1. Repeated SSH authentication failures targeted the `backupuser` account.
 2. Multiple successful SSH authentication events followed the failed attempts.
@@ -130,6 +130,13 @@ Further investigation would be required to establish the full impact of the susp
 - Investigating unusual outbound network connections.
 - Reviewing IAM activity and potential privilege escalation.
 - Investigating possible access to or exfiltration of S3 data.
+
+
+Evidence Produced
+    • GuardDuty_SSH_Brute_Force_Finding.png—GuardDuty Detection of SSH Brute-Force Activity Against EC2 Instance
+    • GuardDuty_SSH_BruteForce.png —This screenshot shows an Amazon GuardDuty security finding identifying SSH brute-force activity against the EC2 instance i-0f9368c3dc7714c42 in the us-west-1 region. The finding identifies 44.219.62.158 as the source IP address and classifies the activity as UnauthorizedAccess: EC2/SSHBruteForce with Low severity. This finding served as the starting point for further investigation in Amazon Detective, where I examined the affected instance, associated IP addresses, and suspicious authentication activity.
+
+
 
 Lessons Learned
 
