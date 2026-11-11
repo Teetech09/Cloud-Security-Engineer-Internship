@@ -1,0 +1,15 @@
+
+CloudTrail Evidence
+
+
+{
+  "eventTime": "2026-11-07T03:41:55Z",            ← 🚩 off-hours
+  "eventName": "AttachUserPolicy",
+  "userIdentity": { "type": "IAMUser", "userName": "cloudgoat-lab" },
+  "sourceIPAddress": "185.220.101.7",             ← 🚩 unfamiliar IP
+  "userAgent": "aws-cli/2.x ...",                 ← 🚩 CLI, not console
+  "requestParameters": {
+    "userName": "backdoor-user",                  ← 🚩 recently created user
+    "policyArn": "arn:aws:iam::aws:policy/AdministratorAccess"   ← 🚩 full privilege
+  }
+}
