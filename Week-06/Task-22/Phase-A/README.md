@@ -32,7 +32,7 @@ Security Findings
 
 Evidence
 
-PhaseA_evidence.png – Annotated CloudTrail JSON event highlighting suspicious IAM activity and relevant security fields.
+PhaseA_evidence.txt – Annotated CloudTrail JSON event highlighting suspicious IAM activity and relevant security fields.
 
 Conclusion
 
