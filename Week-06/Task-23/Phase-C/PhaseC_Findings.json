@@ -1,0 +1,68 @@
+{
+  "task": "Week 6, Task 23 - Phase C: Detection & Analysis",
+  "scenario": "CloudGoat iam_privesc_by_attachment (cgidjij1nc9chc)",
+  "detection_source_note": "GuardDuty unavailable on account (Free tier, SubscriptionRequiredException). All findings derived from AWS CloudTrail via 'aws cloudtrail lookup-events', substituting for the GuardDuty-based workflow in the original task brief.",
+  "attacker_identity": "arn:aws:iam::718543338561:user/kerrigan",
+  "source_ip": "105.113.103.235",
+  "findings": [
+    {
+      "finding_id": "F1",
+      "title": "IAM Self- and Role-Enumeration by Low-Privilege User",
+      "category": "Discovery / Reconnaissance",
+      "mitre_attack": ["T1087.004 - Account Discovery: Cloud Account", "T1526 - Cloud Service Discovery"],
+      "severity": "Medium",
+      "description": "User kerrigan attempted to enumerate her own attached and inline policies (denied), then successfully listed IAM roles and instance profiles in the account, revealing cg-ec2-meek-role and cg-ec2-mighty-role and their associated instance profiles.",
+      "evidence_events": [
+        {"time": "2026-11-12T09:37:41+01:00", "event": "GetCallerIdentity"},
+        {"time": "2026-11-12T09:38:41+01:00", "event": "ListAttachedUserPolicies", "result": "AccessDenied"},
+        {"time": "2026-11-12T09:38:43+01:00", "event": "ListUserPolicies", "result": "AccessDenied"},
+        {"time": "2026-11-12T09:39:19+01:00", "event": "ListRoles"},
+        {"time": "2026-11-12T09:39:21+01:00", "event": "ListInstanceProfiles"}
+      ]
+    },
+    {
+      "finding_id": "F2",
+      "title": "Privilege Escalation via IAM Instance Profile Role Swap",
+      "category": "Privilege Escalation",
+      "mitre_attack": ["T1098.003 - Account Manipulation: Additional Cloud Roles"],
+      "severity": "High",
+      "description": "After a denied attempt to create a new instance profile, kerrigan removed the low-privilege cg-ec2-meek-role from the existing cg-ec2-meek-instance-profile and attached the higher-privilege cg-ec2-mighty-role to the same profile. This is a direct privilege escalation path: a user with iam:AddRoleToInstanceProfile / iam:RemoveRoleFromInstanceProfile but without iam:PassRole restrictions can redirect an existing instance profile to a more privileged role.",
+      "evidence_events": [
+        {"time": "2026-11-12T09:39:59+01:00", "event": "CreateInstanceProfile", "result": "AccessDenied"},
+        {"time": "2026-11-12T09:40:00+01:00", "event": "AddRoleToInstanceProfile", "result": "LimitExceeded (profile already holds a role)"},
+        {"time": "2026-11-12T09:40:57+01:00", "event": "RemoveRoleFromInstanceProfile", "detail": "Removed cg-ec2-meek-role from cg-ec2-meek-instance-profile-cgidjij1nc9chc"},
+        {"time": "2026-11-12T09:41:09+01:00", "event": "AddRoleToInstanceProfile", "detail": "Added cg-ec2-mighty-role to cg-ec2-meek-instance-profile-cgidjij1nc9chc", "result": "Success"}
+      ]
+    },
+    {
+      "finding_id": "F3",
+      "title": "Compute Resource Creation to Obtain Elevated Credentials",
+      "category": "Privilege Escalation / Execution",
+      "mitre_attack": ["T1578.002 - Modify Cloud Compute Infrastructure: Create Cloud Instance", "T1078.004 - Valid Accounts: Cloud Accounts"],
+      "severity": "High",
+      "description": "kerrigan launched an EC2 instance with the now-escalated instance profile attached, allowing any process on that instance to retrieve cg-ec2-mighty-role credentials via the EC2 instance metadata service (IMDS). Interactive logon (SSH) followed by an IMDSv2 credential request confirmed the escalation: 'aws sts get-caller-identity' returned an assumed-role identity for cg-ec2-mighty-role-cgidjij1nc9chc.",
+      "evidence_events": [
+        {"time": "2026-11-12T09:45:49+01:00", "event": "RunInstances", "detail": "Instance i-058ab9689ac3248ad launched with cg-ec2-meek-instance-profile (carrying mighty role)"},
+        {"time": "2026-11-12T09:45:50+01:00", "event": "AssumeRole (AWSService)", "detail": "EC2 service assumed cg-ec2-mighty-role-cgidjij1nc9chc on behalf of the instance"},
+        {"time": "2026-11-12T10:23:44+01:00", "event": "AssumeRole (AWSService)", "detail": "Automatic credential refresh for the assumed role"},
+        {"time": "2026-11-12T11:26:40+01:00", "event": "AssumeRole (AWSService)", "detail": "Automatic credential refresh for the assumed role"},
+        {"time": "confirmed interactively", "event": "GetCallerIdentity (via IMDS credentials, from inside the instance)", "result": "arn:aws:sts::718543338561:assumed-role/cg-ec2-mighty-role-cgidjij1nc9chc/i-0e7fe695da62fad3a"}
+      ]
+    },
+    {
+      "finding_id": "F4",
+      "title": "Persistence of Escalated Access Across Instance Replacement",
+      "category": "Persistence",
+      "mitre_attack": ["T1578.002 - Modify Cloud Compute Infrastructure: Create Cloud Instance"],
+      "severity": "Medium",
+      "description": "The original exploitation instance (i-058ab9689ac3248ad) was terminated and a second instance (i-0e7fe695da62fad3a) was launched with the same escalated instance profile and an attacker-imported SSH key pair, demonstrating that the escalation path persists at the instance-profile/role level and can be re-exploited independently of any single compute instance.",
+      "evidence_events": [
+        {"time": "2026-11-12T11:55:41+01:00", "event": "TerminateInstances", "detail": "i-058ab9689ac3248ad terminated"},
+        {"time": "2026-11-12T11:52:34+01:00", "event": "DescribeImages"},
+        {"time": "2026-11-12T12:00:34+01:00", "event": "RunInstances", "detail": "i-0e7fe695da62fad3a launched with cg-ec2-meek-instance-profile and imported key pair cloudgoat-key"},
+        {"time": "2026-11-12T12:00:35+01:00", "event": "AssumeRole (AWSService)", "detail": "EC2 service re-assumed cg-ec2-mighty-role-cgidjij1nc9chc for the new instance"}
+      ]
+    }
+  ],
+  "detection_gap_note": "A read-only attempt to view the mighty role's own policies (ListAttachedRolePolicies, ListRolePolicies at 10:02-10:03) was denied, meaning kerrigan could not directly inspect what she was escalating into - she had to prove the escalation empirically via GetCallerIdentity from the assumed role itself. This illustrates that IAM write/attach permissions on a resource do not require read permissions on that same resource, which complicates manual review and increases reliance on CloudTrail for detection."
+}
