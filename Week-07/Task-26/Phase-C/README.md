@@ -26,4 +26,5 @@ I also want to record the limits of this setup. Moto is a simulator, and it does
 
 Evidence Produced
 
-PhaseC_graph.png` is a screenshot of the Neo4j graph showing `LowPrivRole` connected to `AdminRole` through the `sts:AssumeRole` edge. `roles.json` is the role list generated with the AWS CLI. If you also saved a screenshot of the terminal with the PMapper query result, add it here as supporting evidence.
+PhaseC_graph.png` is a screenshot of the Neo4j graph showing `LowPrivRole` connected to `AdminRole` through the `sts:AssumeRole` edge. `roles.json` is the role list generated with the AWS CLI. 
+
