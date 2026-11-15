@@ -1,0 +1,54 @@
+
+  "target_role_trust_policy": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "AWS": "arn:aws:iam::718543338561:role/ExampleRole"
+        },
+        "Action": "sts:AssumeRole"
+      }
+    ]
+  },
+  "chain": [
+    {
+      "step": 1,
+      "action": "ops-user assumes ExampleRole",
+      "result": {
+        "Credentials": {
+          "AccessKeyId": "ASIA2OTEFHRA7BIGCTOQ",
+          "SecretAccessKey": "REDACTED",
+          "SessionToken": "REDACTED",
+          "Expiration": "2026-11-15T11:16:12+00:00"
+        },
+        "AssumedRoleUser": {
+          "AssumedRoleId": "AROA2OTEFHRAVSKT7IM2A:chainStep1",
+          "Arn": "arn:aws:sts::718543338561:assumed-role/ExampleRole/chainStep1"
+        },
+        "PackedPolicySize": 18,
+        "SessionTokenUtilization": 18,
+        "SessionTokenSize": 752
+      }
+    },
+    {
+      "step": 2,
+      "action": "ExampleRole assumes RoleB",
+      "result": {
+        "Credentials": {
+          "AccessKeyId": "ASIA2OTEFHRAW4ZJRCZG",
+          "SecretAccessKey": "REDACTED",
+          "SessionToken": "REDACTED",
+          "Expiration": "2026-11-15T11:19:07+00:00"
+        },
+        "AssumedRoleUser": {
+          "AssumedRoleId": "AROA2OTEFHRARJVHZPGKD:chainStep2",
+          "Arn": "arn:aws:sts::718543338561:assumed-role/RoleB/chainStep2"
+        },
+        "PackedPolicySize": 18,
+        "SessionTokenUtilization": 18,
+        "SessionTokenSize": 752
+      }
+    }
+  ]
+}
