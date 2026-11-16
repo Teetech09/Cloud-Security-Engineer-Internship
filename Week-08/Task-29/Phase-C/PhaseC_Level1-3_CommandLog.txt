@@ -1,0 +1,324 @@
+Script started on 2026-11-16 12:19:30+01:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="189" LINES="44"]
+[?2004h]0;teetech@DESKTOP-SUTDVRT: ~/flaws_capstone[01;32mteetech@DESKTOP-SUTDVRT[00m:[01;34m~/flaws_capstone[00m$ dig flaws.cloud
+[?2004l
+; <<>> DiG 9.20.24-1ubuntu0.5-Ubuntu <<>> flaws.cloud
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 18355
+;; flags: qr rd ad; QUERY: 1, ANSWER: 8, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;flaws.cloud.			IN	A
+
+;; ANSWER SECTION:
+flaws.cloud.		0	IN	A	52.92.146.219
+flaws.cloud.		0	IN	A	16.15.40.199
+flaws.cloud.		0	IN	A	52.92.195.115
+flaws.cloud.		0	IN	A	16.15.40.49
+flaws.cloud.		0	IN	A	52.92.203.139
+flaws.cloud.		0	IN	A	16.12.89.227
+flaws.cloud.		0	IN	A	3.5.78.208
+flaws.cloud.		0	IN	A	52.92.163.99
+
+;; Query time: 236 msec
+;; SERVER: 172.28.128.1#53(172.28.128.1) (UDP)
+;; WHEN: Mon Nov 16 12:19:51 WAT 2026
+;; MSG SIZE  rcvd: 168
+
+[?2004h]0;teetech@DESKTOP-SUTDVRT: ~/flaws_capstone[01;32mteetech@DESKTOP-SUTDVRT[00m:[01;34m~/flaws_capstone[00m$ nslookup flaws.cloud
+[?2004l;; Got recursion not available from 172.28.128.1
+Server:		172.28.128.1
+Address:	172.28.128.1#53
+
+Non-authoritative answer:
+Name:	flaws.cloud
+Address: 52.92.146.219
+Name:	flaws.cloud
+Address: 16.15.40.199
+Name:	flaws.cloud
+Address: 52.92.195.115
+Name:	flaws.cloud
+Address: 16.15.40.49
+Name:	flaws.cloud
+Address: 52.92.203.139
+Name:	flaws.cloud
+Address: 16.12.89.227
+Name:	flaws.cloud
+Address: 3.5.78.208
+Name:	flaws.cloud
+Address: 52.92.163.99
+
+[?2004h]0;teetech@DESKTOP-SUTDVRT: ~/flaws_capstone[01;32mteetech@DESKTOP-SUTDVRT[00m:[01;34m~/flaws_capstone[00m$ host flaws.cloud
+[?2004lflaws.cloud has address 52.92.146.219
+flaws.cloud has address 16.15.40.199
+flaws.cloud has address 52.92.195.115
+flaws.cloud has address 16.15.40.49
+flaws.cloud has address 52.92.203.139
+flaws.cloud has address 16.12.89.227
+flaws.cloud has address 3.5.78.208
+flaws.cloud has address 52.92.163.99
+[?2004h]0;teetech@DESKTOP-SUTDVRT: ~/flaws_capstone[01;32mteetech@DESKTOP-SUTDVRT[00m:[01;34m~/flaws_capstone[00m$ aws s3 ls s3://flaws.cloud/ --no-sign-request
+[?2004l2017-03-14 04:00:38       2575 hint1.html
+2017-03-03 05:05:17       1707 hint2.html
+2017-03-03 05:05:11       1101 hint3.html
+2024-02-22 03:32:41       2861 index.html
+2018-07-10 17:47:16      15979 logo.png
+2017-02-27 02:59:28         46 robots.txt
+2017-02-27 02:59:30       1051 secret-dd02c7c.html
+[?2004h]0;teetech@DESKTOP-SUTDVRT: ~/flaws_capstone[01;32mteetech@DESKTOP-SUTDVRT[00m:[01;34m~/flaws_capstone[00m$ aws s3 ls s3://<level2-bucket>/ --profile flaws-sandbox
+[?2004lbash: level2-bucket: No such file or directory
+[?2004h]0;teetech@DESKTOP-SUTDVRT: ~/flaws_capstone[01;32mteetech@DESKTOP-SUTDVRT[00m:[01;34m~/flaws_capstone[00m$ aws s3 cp s3://flaws.cloud/robots.txt --no-sign-request -
+[?2004l
+User-agent: *
+Allow: /index.html
+Disallow: /[?2004h]0;teetech@DESKTOP-SUTDVRT: ~/flaws_capstone[01;32mteetech@DESKTOP-SUTDVRT[00m:[01;34m~/flaws_capstone[00m$ aws s3 cp s3://flaws.cloud/secret-dd02c7c.html --no-sign-request -
+[?2004l<html>
+    <head>
+        <title>flAWS</title>
+        <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+        <style>
+            body { font-family: Andale Mono, monospace; }
+            :not(center) > pre { background-color: #202020; padding: 4px; border-radius: 5px; border-color:#00d000; 
+            border-width: 1px; border-style: solid;} 
+        </style>
+    </head>
+<body 
+  text="#00d000" 
+  bgcolor="#000000"  
+  style="max-width:800px; margin-left:auto ;margin-right:auto"
+  vlink="#00ff00" link="#00ff00">
+    
+<center>
+<pre >
+ _____  _       ____  __    __  _____
+|     || |     /    ||  |__|  |/ ___/
+|   __|| |    |  o  ||  |  |  (   \_ 
+|  |_  | |___ |     ||  |  |  |\__  |
+|   _] |     ||  _  ||  `  '  |/  \ |
+|  |   |     ||  |  | \      / \    |
+|__|   |_____||__|__|  \_/\_/   \___|
+</pre>
+
+<h1>Congrats! You found the secret file!</h1>
+</center>
+
+
+Level 2 is at <a href="http://level2-c8b217a33fcf1f839f6f1f73a00a9ae7.flaws.cloud">http://level2-c8b217a33fcf1f839f6f1f73a00a9ae7.flaws.cloud</a>[?2004h]0;teetech@DESKTOP-SUTDVRT: ~/flaws_capstone[01;32mteetech@DESKTOP-SUTDVRT[00m:[01;34m~/flaws_capstone[00m$ aws s3 ls s3://level2-c8b217a33fcf1f839f6f1f73a00a9ae7.flaws.cloud/ --no-sign-request
+[?2004l
+
+aws: [ERROR]: An error occurred (AccessDenied) when calling the ListObjectsV2 operation: Access Denied
+[?2004h]0;teetech@DESKTOP-SUTDVRT: ~/flaws_capstone[01;32mteetech@DESKTOP-SUTDVRT[00m:[01;34m~/flaws_capstone[00m$ aws s3 ls s3://level2-c8b217a33fcf1f839f6f1f73a00a9ae7.flaws.cloud/ --profile flaws-sandbox
+[?2004l2017-02-27 03:02:15      80751 everyone.png
+2017-03-03 04:47:17       1433 hint1.html
+2017-02-27 03:04:39       1035 hint2.html
+2017-02-27 03:02:14       2786 index.html
+2017-02-27 03:02:14         26 robots.txt
+2017-02-27 03:02:15       1051 secret-e4443fc.html
+[?2004h]0;teetech@DESKTOP-SUTDVRT: ~/flaws_capstone[01;32mteetech@DESKTOP-SUTDVRT[00m:[01;34m~/flaws_capstone[00m$ aws s3 cp s3://level2-c8b217a33fcf1f839f6f1f73a00a9ae7.flaws.cloud/secret-e4443fc.html --profile flaws-sandbox -
+[?2004l<html>
+    <head>
+        <title>flAWS</title>
+        <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+        <style>
+            body { font-family: Andale Mono, monospace; }
+            :not(center) > pre { background-color: #202020; padding: 4px; border-radius: 5px; border-color:#00d000; 
+            border-width: 1px; border-style: solid;} 
+        </style>
+    </head>
+<body 
+  text="#00d000" 
+  bgcolor="#000000"  
+  style="max-width:800px; margin-left:auto ;margin-right:auto"
+  vlink="#00ff00" link="#00ff00">
+    
+<center>
+<pre >
+ _____  _       ____  __    __  _____
+|     || |     /    ||  |__|  |/ ___/
+|   __|| |    |  o  ||  |  |  (   \_ 
+|  |_  | |___ |     ||  |  |  |\__  |
+|   _] |     ||  _  ||  `  '  |/  \ |
+|  |   |     ||  |  | \      / \    |
+|__|   |_____||__|__|  \_/\_/   \___|
+</pre>
+
+<h1>Congrats! You found the secret file!</h1>
+</center>
+
+
+Level 3 is at <a href="http://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud">http://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud</a>[?2004h]0;teetech@DESKTOP-SUTDVRT: ~/flaws_capstone[01;32mteetech@DESKTOP-SUTDVRT[00m:[01;34m~/flaws_capstone[00m$ mkdir -p ~/flaws_capstone/level3 && cd ~/flaws_capstone/level3
+[?2004l[?2004h]0;teetech@DESKTOP-SUTDVRT: ~/flaws_capstone/level3[01;32mteetech@DESKTOP-SUTDVRT[00m:[01;34m~/flaws_capstone/level3[00m$ aws s3 sync s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/ . --profile flaws-sandbox
+[?2004l
+Completed 23 Bytes/256.6 KiB (15 Bytes/s) with 36 file(s) remainingCompleted 153 Bytes/256.6 KiB (101 Bytes/s) with 36 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/HEAD to .git/HEAD
+Completed 153 Bytes/256.6 KiB (101 Bytes/s) with 35 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/config to .git/config
+Completed 153 Bytes/256.6 KiB (101 Bytes/s) with 34 file(s) remainingCompleted 205 Bytes/256.6 KiB (135 Bytes/s) with 34 file(s) remainingCompleted 278 Bytes/256.6 KiB (183 Bytes/s) with 34 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/COMMIT_EDITMSG to .git/COMMIT_EDITMSG
+Completed 278 Bytes/256.6 KiB (183 Bytes/s) with 33 file(s) remainingCompleted 1.1 KiB/256.6 KiB (769 Bytes/s) with 33 file(s) remaining  Completed 1.7 KiB/256.6 KiB (1.1 KiB/s) with 33 file(s) remaining    download: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/description to .git/description
+Completed 1.7 KiB/256.6 KiB (1.1 KiB/s) with 32 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/hooks/commit-msg.sample to .git/hooks/commit-msg.sample
+Completed 1.7 KiB/256.6 KiB (1.1 KiB/s) with 31 file(s) remainingCompleted 3.4 KiB/256.6 KiB (2.2 KiB/s) with 31 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/index to .git/index
+Completed 3.4 KiB/256.6 KiB (2.2 KiB/s) with 30 file(s) remainingCompleted 3.8 KiB/256.6 KiB (2.5 KiB/s) with 30 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/hooks/pre-commit.sample to .git/hooks/pre-commit.sample
+Completed 3.8 KiB/256.6 KiB (2.5 KiB/s) with 29 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/hooks/pre-applypatch.sample to .git/hooks/pre-applypatch.sample
+Completed 3.8 KiB/256.6 KiB (2.5 KiB/s) with 28 file(s) remainingCompleted 8.6 KiB/256.6 KiB (5.6 KiB/s) with 28 file(s) remainingCompleted 9.0 KiB/256.6 KiB (5.5 KiB/s) with 28 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/hooks/pre-rebase.sample to .git/hooks/pre-rebase.sample
+Completed 9.0 KiB/256.6 KiB (5.5 KiB/s) with 27 file(s) remainingCompleted 10.2 KiB/256.6 KiB (5.5 KiB/s) with 27 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/hooks/applypatch-msg.sample to .git/hooks/applypatch-msg.sample
+Completed 10.2 KiB/256.6 KiB (5.5 KiB/s) with 26 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/hooks/prepare-commit-msg.sample to .git/hooks/prepare-commit-msg.sample
+Completed 10.2 KiB/256.6 KiB (5.5 KiB/s) with 25 file(s) remainingCompleted 13.7 KiB/256.6 KiB (7.4 KiB/s) with 25 file(s) remainingCompleted 14.0 KiB/256.6 KiB (7.6 KiB/s) with 25 file(s) remainingCompleted 14.3 KiB/256.6 KiB (7.8 KiB/s) with 25 file(s) remainingCompleted 14.5 KiB/256.6 KiB (7.8 KiB/s) with 25 file(s) remainingCompleted 14.9 KiB/256.6 KiB (8.0 KiB/s) with 25 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/hooks/update.sample to .git/hooks/update.sample
+Completed 14.9 KiB/256.6 KiB (8.0 KiB/s) with 24 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/info/exclude to .git/info/exclude
+Completed 14.9 KiB/256.6 KiB (8.0 KiB/s) with 23 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/logs/HEAD to .git/logs/HEAD
+Completed 14.9 KiB/256.6 KiB (8.0 KiB/s) with 22 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/logs/refs/heads/master to .git/logs/refs/heads/master
+Completed 14.9 KiB/256.6 KiB (8.0 KiB/s) with 21 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/hooks/post-update.sample to .git/hooks/post-update.sample
+Completed 14.9 KiB/256.6 KiB (8.0 KiB/s) with 20 file(s) remainingCompleted 15.6 KiB/256.6 KiB (8.3 KiB/s) with 20 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/objects/2f/c08f72c2135bb3af7af5803abb77b3e240b6df to .git/objects/2f/c08f72c2135bb3af7af5803abb77b3e240b6df
+Completed 15.6 KiB/256.6 KiB (8.3 KiB/s) with 19 file(s) remainingCompleted 16.3 KiB/256.6 KiB (8.7 KiB/s) with 19 file(s) remainingCompleted 17.1 KiB/256.6 KiB (9.1 KiB/s) with 19 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/objects/0e/aa50ae75709eb4d25f07195dc74c7f3dca3e25 to .git/objects/0e/aa50ae75709eb4d25f07195dc74c7f3dca3e25
+Completed 17.1 KiB/256.6 KiB (9.1 KiB/s) with 18 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/objects/53/23d77d2d914c89b220be9291439e3da9dada3c to .git/objects/53/23d77d2d914c89b220be9291439e3da9dada3c
+Completed 17.1 KiB/256.6 KiB (9.1 KiB/s) with 17 file(s) remainingCompleted 17.3 KiB/256.6 KiB (8.8 KiB/s) with 17 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/objects/61/a5ff2913c522d4cf4397f2500201ce5a8e097b to .git/objects/61/a5ff2913c522d4cf4397f2500201ce5a8e097b
+Completed 17.3 KiB/256.6 KiB (8.8 KiB/s) with 16 file(s) remainingCompleted 17.4 KiB/256.6 KiB (8.0 KiB/s) with 16 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/objects/c2/aab7e03933a858d1765090928dca4013fe2526 to .git/objects/c2/aab7e03933a858d1765090928dca4013fe2526
+Completed 17.4 KiB/256.6 KiB (8.0 KiB/s) with 15 file(s) remainingCompleted 17.5 KiB/256.6 KiB (8.0 KiB/s) with 15 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/objects/b6/4c8dcfa8a39af06521cf4cb7cdce5f0ca9e526 to .git/objects/b6/4c8dcfa8a39af06521cf4cb7cdce5f0ca9e526
+Completed 17.5 KiB/256.6 KiB (8.0 KiB/s) with 14 file(s) remainingCompleted 18.1 KiB/256.6 KiB (8.3 KiB/s) with 14 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/objects/92/d5a82ef553aae51d7a2f86ea0a5b1617fafa0c to .git/objects/92/d5a82ef553aae51d7a2f86ea0a5b1617fafa0c
+Completed 18.1 KiB/256.6 KiB (8.3 KiB/s) with 13 file(s) remainingCompleted 18.2 KiB/256.6 KiB (8.3 KiB/s) with 13 file(s) remainingCompleted 19.1 KiB/256.6 KiB (8.7 KiB/s) with 13 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/objects/e3/ae6dd991f0352cc307f82389d354c65f1874a2 to .git/objects/e3/ae6dd991f0352cc307f82389d354c65f1874a2
+Completed 19.1 KiB/256.6 KiB (8.7 KiB/s) with 12 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/objects/db/932236a95ebf8c8a7226432cf1880e4b4017f2 to .git/objects/db/932236a95ebf8c8a7226432cf1880e4b4017f2
+Completed 19.1 KiB/256.6 KiB (8.7 KiB/s) with 11 file(s) remainingCompleted 19.3 KiB/256.6 KiB (8.8 KiB/s) with 11 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/objects/f2/a144957997f15729d4491f251c3615d508b16a to .git/objects/f2/a144957997f15729d4491f251c3615d508b16a
+Completed 19.3 KiB/256.6 KiB (8.8 KiB/s) with 10 file(s) remainingCompleted 19.4 KiB/256.6 KiB (8.8 KiB/s) with 10 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/refs/heads/master to .git/refs/heads/master
+Completed 19.4 KiB/256.6 KiB (8.8 KiB/s) with 9 file(s) remainingCompleted 19.5 KiB/256.6 KiB (8.8 KiB/s) with 9 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/objects/f5/2ec03b227ea6094b04e43f475fb0126edb5a61 to .git/objects/f5/2ec03b227ea6094b04e43f475fb0126edb5a61
+Completed 19.5 KiB/256.6 KiB (8.8 KiB/s) with 8 file(s) remainingCompleted 21.0 KiB/256.6 KiB (8.5 KiB/s) with 8 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/hint1.html to ./hint1.html
+Completed 21.0 KiB/256.6 KiB (8.5 KiB/s) with 7 file(s) remainingCompleted 22.2 KiB/256.6 KiB (8.9 KiB/s) with 7 file(s) remainingCompleted 23.3 KiB/256.6 KiB (9.3 KiB/s) with 7 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/hint3.html to ./hint3.html
+Completed 23.3 KiB/256.6 KiB (9.3 KiB/s) with 6 file(s) remainingCompleted 25.1 KiB/256.6 KiB (10.0 KiB/s) with 6 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/hint4.html to ./hint4.html
+Completed 25.1 KiB/256.6 KiB (10.0 KiB/s) with 5 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/index.html to ./index.html
+Completed 25.1 KiB/256.6 KiB (10.0 KiB/s) with 4 file(s) remainingCompleted 25.1 KiB/256.6 KiB (10.0 KiB/s) with 4 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/robots.txt to ./robots.txt
+Completed 25.1 KiB/256.6 KiB (10.0 KiB/s) with 3 file(s) remainingCompleted 26.5 KiB/256.6 KiB (10.5 KiB/s) with 3 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/hint2.html to ./hint2.html
+Completed 26.5 KiB/256.6 KiB (10.5 KiB/s) with 2 file(s) remainingCompleted 135.9 KiB/256.6 KiB (47.2 KiB/s) with 2 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/.git/objects/76/e4934c9de40e36f09b4e5538236551529f723c to .git/objects/76/e4934c9de40e36f09b4e5538236551529f723c
+Completed 135.9 KiB/256.6 KiB (47.2 KiB/s) with 1 file(s) remainingCompleted 256.6 KiB/256.6 KiB (80.8 KiB/s) with 1 file(s) remainingdownload: s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/authenticated_users.png to ./authenticated_users.png
+[?2004h]0;teetech@DESKTOP-SUTDVRT: ~/flaws_capstone/level3[01;32mteetech@DESKTOP-SUTDVRT[00m:[01;34m~/flaws_capstone/level3[00m$ ls -la
+[?2004ltotal 160
+drwxr-xr-x 3 teetech teetech   4096 Nov 16 12:36 [0m[01;34m.[0m
+drwxr-xr-x 4 teetech teetech   4096 Nov 16 12:36 [01;34m..[0m
+drwxr-xr-x 7 teetech teetech   4096 Nov 16 12:36 [01;34m.git[0m
+-rw-r--r-- 1 teetech teetech 123637 Feb 27  2017 [01;35mauthenticated_users.png[0m
+-rw-r--r-- 1 teetech teetech   1552 Feb 27  2017 hint1.html
+-rw-r--r-- 1 teetech teetech   1426 Feb 27  2017 hint2.html
+-rw-r--r-- 1 teetech teetech   1247 Feb 27  2017 hint3.html
+-rw-r--r-- 1 teetech teetech   1035 Feb 27  2017 hint4.html
+-rw-r--r-- 1 teetech teetech   1861 May 22  2020 index.html
+-rw-r--r-- 1 teetech teetech     26 Feb 27  2017 robots.txt
+[?2004h]0;teetech@DESKTOP-SUTDVRT: ~/flaws_capstone/level3[01;32mteetech@DESKTOP-SUTDVRT[00m:[01;34m~/flaws_capstone/level3[00m$ git log --all --oneline
+[?2004l[?1h=[33mb64c8dc[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m Oops, accidentally added something I shouldn't have[m
+[33mf52ec03[m first commit[m
+[K[?1l>[?2004h]0;teetech@DESKTOP-SUTDVRT: ~/flaws_capstone/level3[01;32mteetech@DESKTOP-SUTDVRT[00m:[01;34m~/flaws_capstone/level3[00m$ git log --all -p
+[?2004l[?1h=[33mcommit b64c8dcfa8a39af06521cf4cb7cdce5f0ca9e526[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m[m
+Author: 0xdabbad00 <scott@summitroute.com>[m
+Date:   Sun Sep 17 09:10:43 2017 -0600[m
+[m
+    Oops, accidentally added something I shouldn't have[m
+[m
+[1mdiff --git a/access_keys.txt b/access_keys.txt[m[m
+[1mdeleted file mode 100644[m[m
+[1mindex e3ae6dd..0000000[m[m
+[1m--- a/access_keys.txt[m[m
+[1m+++ /dev/null[m[m
+[36m@@ -1,2 +0,0 @@[m[m
+[31m-access_key [REDACTED_ACCESS_KEY][m[m
+[31m-secret_access_key [REDACTED_SECRET][m[m
+[m
+[33mcommit f52ec03b227ea6094b04e43f475fb0126edb5a61[m[m
+Author: 0xdabbad00 <scott@summitroute.com>[m
+Date:   Sun Sep 17 09:10:07 2017 -0600[m
+[m
+    first commit[m
+[m
+[1mdiff --git a/access_keys.txt b/access_keys.txt[m[m
+[1mnew file mode 100644[m[m
+[1mindex 0000000..e3ae6dd[m[m
+[1m--- /dev/null[m[m
+[1m+++ b/access_keys.txt[m[m
+[36m@@ -0,0 +1,2 @@[m[m
+[32m+[m[32maccess_key [REDACTED_ACCESS_KEY][m[m
+[32m+[m[32msecret_access_key [REDACTED_SECRET][m[m
+[1mdiff --git a/authenticated_users.png b/authenticated_users.png[m[m
+[1mnew file mode 100644[m[m
+[1mindex 0000000..76e4934[m[m
+Binary files /dev/null and b/authenticated_users.png differ[m
+[1mdiff --git a/hint1.html b/hint1.html[m[m
+[1mnew file mode 100644[m[m
+[1mindex 0000000..5323d77[m[m
+[1m--- /dev/null[m[m
+[1m+++ b/hint1.html[m[m
+[36m@@ -0,0 +1,38 @@[m[m
+[32m+[m[32m<html>[m[41m[7m^M[27m[m[m
+[32m+[m[32m    <head>[m[41m[7m^M[27m[m[m
+[32m+[m[32m        <title>flAWS</title>[m[41m[7m^M[27m[m[m
+[32m+[m[32m        <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">[m[41m[7m^M[27m[m[m
+:[K[K[?1l>[?2004h]0;teetech@DESKTOP-SUTDVRT: ~/flaws_capstone/level3[01;32mteetech@DESKTOP-SUTDVRT[00m:[01;34m~/flaws_capstone/level3[00m$ git log --all -p -- access_keys.txt > ~/flaws_capstone/Evidence/PhaseC_Level3_GitHistory_raw.txt
+[?2004l[?2004h]0;teetech@DESKTOP-SUTDVRT: ~/flaws_capstone/level3[01;32mteetech@DESKTOP-SUTDVRT[00m:[01;34m~/flaws_capstone/level3[00m$ sed -E 's/AKIA[A-Z0-9]+/[REDACTED_ACCESS_KEY]/; s#(secret_access_key )\S+#\1[REDACTED_SECRET]#' ~/flaws_capstone/Evidence/PhaseC_Level3_GitHistory_raw.txt > ~/flaws_capstone/Evidence/PhaseC_Level3_GitHistory_redacted.txt
+[?2004l[?2004h]0;teetech@DESKTOP-SUTDVRT: ~/flaws_capstone/level3[01;32mteetech@DESKTOP-SUTDVRT[00m:[01;34m~/flaws_capstone/level3[00m$ cat ~/flaws_capstone/Evidence/PhaseC_Level3_GitHistory_redacted.txt
+[?2004lcommit b64c8dcfa8a39af06521cf4cb7cdce5f0ca9e526
+Author: 0xdabbad00 <scott@summitroute.com>
+Date:   Sun Sep 17 09:10:43 2017 -0600
+
+    Oops, accidentally added something I shouldn't have
+
+diff --git a/access_keys.txt b/access_keys.txt
+deleted file mode 100644
+index e3ae6dd..0000000
+--- a/access_keys.txt
++++ /dev/null
+@@ -1,2 +0,0 @@
+-access_key [REDACTED_ACCESS_KEY]
+-secret_access_key [REDACTED_SECRET]
+
+commit f52ec03b227ea6094b04e43f475fb0126edb5a61
+Author: 0xdabbad00 <scott@summitroute.com>
+Date:   Sun Sep 17 09:10:07 2017 -0600
+
+    first commit
+
+diff --git a/access_keys.txt b/access_keys.txt
+new file mode 100644
+index 0000000..e3ae6dd
+--- /dev/null
++++ b/access_keys.txt
+@@ -0,0 +1,2 @@
++access_key [REDACTED_ACCESS_KEY]
++secret_access_key [REDACTED_SECRET]
+[?2004h]0;teetech@DESKTOP-SUTDVRT: ~/flaws_capstone/level3[01;32mteetech@DESKTOP-SUTDVRT[00m:[01;34m~/flaws_capstone/level3[00m$ rm ~/flaws_capstone/Evidence/PhaseC_Level3_GitHistory_raw.txt
+[?2004l[?2004h]0;teetech@DESKTOP-SUTDVRT: ~/flaws_capstone/level3[01;32mteetech@DESKTOP-SUTDVRT[00m:[01;34m~/flaws_capstone/level3[00m$ aws configure --profile flaws-l3-leaked
+[?2004l
+Tip: You can deliver temporary credentials to the AWS CLI using your AWS Console session by running the command 'aws login'.
+
+AWS Access Key ID [None]: [REDACTED_ACCESS_KEY]
+AWS Secret Access Key [None]: [REDACTED_SECRET]
+[?12l[?25h[6n[?2004h[?1l[?25l[0m[?7l[0m[J[0mDefault region name [None]:[0m
+
+
+
+
+
+
+[0m [7A[28C[?7h[0m[?12l[?25h[?25l[?7l[?7h[0m[?12l[?25h[?25l[?7l[0mU[?7h[0m[?12l[?25h[?25l[?7l[0mS[?7h[0m[?12l[?25h[?25l[?7l[0m-[?7h[0m[?12l[?25h[?25l[?7l[0m[K[?7h[0m[?12l[?25h[?25l[?7l[0m[K[?7h[0m[?12l[?25h[?25l[?7l[2D[0m[K[C[?7h[0m[?12l[?25h[?25l[?7l[0mu[0m
+[29C[0;38;5;16;48;5;250m us-east-1       [0;38;5;16;48;5;238m [0m
+[29C[0;38;5;16;48;5;250m us-east-2       [0;38;5;16;48;5;238m [0m
+[29C[0;38;5;16;48;5;250m us-west-1       [0;38;5;16;48;5;238m [0m
+[29C[0;38;5;16;48;5;250m us-west-2       [0;38;5;16;48;5;238m [0m
+[29C[0;38;5;16;48;5;250m us-iso-east-1   [0;38;5;16;48;5;238m [0m
+[29C[0;38;5;16;48;5;250m us-iso-west-1   [0;38;5;16;48;5;248m [0m
+[29C[0;38;5;16;48;5;250m us-isob-east-1  [0;38;5;16;48;5;248m [7A[18D[?7h[0m[?12l[?25h[?25l[?7l[0ms[0m
+[29C[0m [0;38;5;16;48;5;250m us-east-1[6C [0;38;5;16;48;5;238m [0m
+[29C[0m [0;38;5;16;48;5;250m us-east-2[6C [0;38;5;16;48;5;238m [0m
+[29C[0m [0;38;5;16;48;5;250m us-west-1[6C [0;38;5;16;48;5;238m [0m
+[29C[0m [0;38;5;16;48;5;250m us-west-2[6C [0;38;5;16;48;5;238m [0m
+[29C[0m [0;38;5;16;48;5;250m us-iso-east-1[2C [0;38;5;16;48;5;238m [0m
+[29C[0m [0;38;5;16;48;5;250m us-iso-west-1[2C [0;38;5;16;48;5;248m [0m
+[29C[0m [0;38;5;16;48;5;250m us-isob-east-1[C [0;38;5;16;48;5;248m [7A[18D[?7h[0m[?12l[?25h[?25l[?7l[0m-[0m
+[30C[0m [0;38;5;16;48;5;250m us-east-1[6C [0;38;5;16;48;5;238m [0m
+[30C[0m [0;38;5;16;48;5;250m us-east-2[6C [0;38;5;16;48;5;238m [0m
+[30C[0m [0;38;5;16;48;5;250m us-west-1[6C [0;38;5;16;48;5;238m [0m
+[30C[0m [0;38;5;16;48;5;250m us-west-2[6C [0;38;5;16;48;5;238m [0m
+[30C[0m [0;38;5;16;48;5;250m us-iso-east-1[2C [0;38;5;16;48;5;238m [0m
+[30C[0m [0;38;5;16;48;5;250m us-iso-west-1[2C [0;38;5;16;48;5;248m [0m
+[30C[0m [0;38;5;16;48;5;250m us-isob-east-1[C [0;38;5;16;48;5;248m [7A[18D[?7h[0m[?12l[?25h[?25l[?7l[0me[0m
+[31C[0m [0;38;5;16;48;5;250m us-east-1[C[0;38;5;16;48;5;238m [0m[K[0m
+[31C[0m [0;38;5;16;48;5;250m us-east-2 [0;38;5;16;48;5;238m [0m[K[0m
+[C[0m[K[0m
+[C[0m[K[0m
+[C[0m[K[0m
+[C[0m[K[0m
+[C[0m[K[7A[31C[?7h[0m[?12l[?25h[?25l[?7l[0ma[0m
+[32C[0m [0;38;5;16;48;5;250m us-east-1 [0;38;5;16;48;5;238m [0m
+[32C[0m [0;38;5;16;48;5;250m us-east-2 [0;38;5;16;48;5;238m [2A[12D[?7
