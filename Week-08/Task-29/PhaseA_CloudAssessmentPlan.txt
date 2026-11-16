@@ -1,0 +1,100 @@
+CLOUD SECURITY ASSESSMENT PLAN
+Week 08 – Task 29, Phase A
+Assessment: flaws.cloud AWS Misconfiguration Challenge
+
+1. Assessment Objective
+
+The objective of this assessment is to investigate common AWS cloud misconfigurations across the six levels of the flaws.cloud challenge. The assessment will examine how insecure configurations, excessive permissions and exposed credentials can create opportunities for unauthorized access and movement across AWS service trust boundaries.
+
+2. Assessment Scope
+
+In-scope resources:
+- flaws.cloud
+- Challenge-designated level subdomains.
+- AWS services and resources intentionally exposed by the challenge.
+
+Services and concepts to examine:
+- Amazon S3
+- AWS Identity and Access Management (IAM)
+- AWS Security Token Service (STS)
+- Amazon EC2
+- Amazon Elastic Block Store (EBS)
+- EC2 Instance Metadata Service (IMDS)
+- AWS Lambda and API Gateway as additional trust-boundary concepts.
+
+3. Rules of Engagement
+
+- Perform testing only against the authorized challenge environment.
+- Do not access unrelated AWS accounts or infrastructure.
+- Do not use personal or production AWS credentials.
+- Avoid destructive operations, persistence and denial-of-service activities.
+- Do not modify or delete challenge resources.
+- Collect only the evidence required to validate security findings.
+- Use hints only when necessary and document their use.
+- Do not consult solution walkthroughs during practical testing.
+- Protect any credentials discovered during the assessment.
+
+4. Assessment Methodology
+
+The investigation will follow these stages:
+
+1. Review the challenge introduction and identify the security objectives.
+2. Identify exposed AWS services and resources.
+3. Examine access permissions and trust relationships.
+4. Identify misconfigurations and potential attack paths.
+5. Assess confidentiality, integrity and availability risks.
+6. Document findings and map relevant techniques to MITRE ATT&CK.
+7. Recommend corrective controls.
+8. Define validation procedures to confirm remediation.
+
+5. Key Trust Boundaries
+
+The assessment will examine the following relationships:
+
+- Public users and Amazon S3 resources.
+- S3 resources and exposed AWS credentials.
+- IAM identities and AWS service permissions.
+- EC2 instances and attached EBS snapshots.
+- EC2 workloads and Instance Metadata Service.
+- Temporary credentials and AWS API authorization.
+- Application services such as Lambda and API Gateway and their execution roles.
+
+6. Risk Assessment
+
+Each finding will be assessed using:
+- Likelihood: Low, Medium or High.
+- Impact: Low, Medium or High.
+- Confidentiality: Potential exposure of sensitive information.
+- Integrity: Potential unauthorized modification of resources.
+- Availability: Potential disruption or loss of service.
+
+7. Evidence Collection
+
+Evidence may include:
+- AWS CLI command outputs.
+- Relevant permission and policy configurations.
+- Resource identifiers and access-control settings.
+- Screenshots of observed misconfigurations.
+- Attack-path diagrams.
+- Remediation and validation results.
+
+8. Expected Deliverables
+
+- PhaseA_CloudAssessmentPlan.txt
+- PhaseA_AttackPath.png
+- Cloud security findings template.
+- Risk-scoring methodology.
+- Practical assessment evidence for Levels 1–6.
+
+9. Assessment Limitations
+
+The assessment is limited to the intentionally vulnerable challenge environment. Findings will reflect the configurations and behaviors observed during testing and will not be generalized to AWS environments without independent validation.
+
+10. Hint Usage Register
+
+Hint used: No  
+Level: N/A  
+Reason: N/A  
+Information obtained: N/A
+
+The hint usage register will be updated if a challenge hint becomes necessary.
