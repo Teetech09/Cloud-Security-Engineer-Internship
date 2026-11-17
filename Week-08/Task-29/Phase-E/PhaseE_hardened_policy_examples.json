@@ -1,0 +1,172 @@
+{
+  "_meta": {
+    "title": "Phase E - Hardened Policy Examples",
+    "task": "Week 08, Task 29 - Defensive Engineering",
+    "author": "Titilayo Yusuf",
+    "note": "Three hardening themes corresponding to the root causes found in flaws.cloud Levels 1, 2, 3/4, 5, and 6. Each example pairs the vulnerable pattern observed in the challenge with a hardened replacement. Validate with: aws accessanalyzer validate-policy --policy-type RESOURCE_POLICY --locale EN --policy-document file://<policy>.json --region us-west-2 --profile flaws-sandbox (use --policy-type IDENTITY_POLICY for the IAM role policy). Cross-check identity policies in IAM Policy Simulator in the sandbox account."
+  },
+
+  "theme_1_restrictive_s3_access": {
+    "description": "Hardens the Level 1/2 weaknesses: anonymous ListBucket and the overly broad AuthenticatedUsers grantee.",
+
+    "vulnerable_pattern_observed": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "PublicListAndAuthenticatedUsersAccess",
+          "Effect": "Allow",
+          "Principal": "*",
+          "Action": ["s3:ListBucket", "s3:GetObject"],
+          "Resource": [
+            "arn:aws:s3:::example-flaws-style-bucket",
+            "arn:aws:s3:::example-flaws-style-bucket/*"
+          ]
+        }
+      ]
+    },
+
+    "hardened_bucket_policy": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "AllowOnlyNamedAccountReadObjects",
+          "Effect": "Allow",
+          "Principal": {
+            "AWS": "arn:aws:iam::123456789012:root"
+          },
+          "Action": "s3:GetObject",
+          "Resource": "arn:aws:s3:::example-flaws-style-bucket/public-site/*",
+          "Condition": {
+            "StringEquals": {
+              "aws:PrincipalAccount": "123456789012"
+            }
+          }
+        },
+        {
+          "Sid": "DenyListBucketForEveryone",
+          "Effect": "Deny",
+          "Principal": "*",
+          "Action": "s3:ListBucket",
+          "Resource": "arn:aws:s3:::example-flaws-style-bucket"
+        }
+      ]
+    },
+
+    "hardening_notes": [
+      "Public read is scoped to a named object prefix (public-site/*) only, never the whole bucket, and never s3:ListBucket.",
+      "Principal is a specific account ID rather than '*' or any AuthenticatedUsers equivalent; the AuthenticatedUsers S3 canned ACL/grantee itself should never be used.",
+      "S3 Block Public Access should additionally be enabled at the account level as a backstop even if a bucket policy is later misconfigured.",
+      "Validate with: aws accessanalyzer validate-policy --policy-type RESOURCE_POLICY --locale EN --policy-document file://hardened_bucket_policy.json --region us-west-2 --profile flaws-sandbox"
+    ]
+  },
+
+  "theme_2_credential_secret_handling": {
+    "description": "Hardens the Level 3/4 weaknesses: a long-lived access key committed to source control (and later in Git history) and a plaintext password left in a setup script on an EBS volume.",
+
+    "vulnerable_pattern_observed": {
+      "example_file": "access_keys.txt (committed to Git, later 'deleted' but recoverable from history)",
+      "content_pattern": "access_key AKIAEXAMPLE0000000\nsecret_access_key EXAMPLEsecretkeyvalueDoNotUseReal0000"
+    },
+
+    "hardened_secrets_manager_reference": {
+      "description": "Application code references a Secrets Manager ARN at runtime instead of embedding any key material in source, scripts, or EC2 user-data.",
+      "iam_policy_for_application_role": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Sid": "AllowReadSpecificSecretOnly",
+            "Effect": "Allow",
+            "Action": ["secretsmanager:GetSecretValue"],
+            "Resource": "arn:aws:secretsmanager:us-west-2:123456789012:secret:app/nginx-basic-auth-??????",
+            "Condition": {
+              "StringEquals": {
+                "aws:ResourceAccount": "123456789012"
+              }
+            }
+          }
+        ]
+      },
+      "setup_script_equivalent": "htpasswd -b /etc/nginx/.htpasswd flaws \"$(aws secretsmanager get-secret-value --secret-id app/nginx-basic-auth --query SecretString --output text --region us-west-2)\""
+    },
+
+    "hardening_notes": [
+      "No access key, secret key, or plaintext password is ever written to a file, script, or Git-tracked repository; secrets are fetched at runtime from AWS Secrets Manager (or SSM Parameter Store with SecureString) under a scoped IAM policy.",
+      "Pre-commit and pre-deploy secret scanning (e.g. Gitleaks, TruffleHog) should block any commit containing key-like patterns before it reaches a public bucket or repository.",
+      "Any credential confirmed or suspected leaked must be deactivated/rotated immediately via 'aws iam update-access-key --status Inactive' followed by deletion, not just removed from the file in a later commit.",
+      "Validate the IAM policy with: aws accessanalyzer validate-policy --policy-type IDENTITY_POLICY --locale EN --policy-document file://hardened_secrets_manager_reference_policy.json --region us-west-2 --profile flaws-sandbox"
+    ]
+  },
+
+  "theme_3_ebs_snapshot_sharing": {
+    "description": "Hardens the Level 4 weakness: an EBS snapshot shared publicly, exposing the full filesystem of a decommissioned EC2.",
+
+    "vulnerable_pattern_observed": {
+      "api_call": "ModifySnapshotAttribute",
+      "parameters": {
+        "SnapshotId": "snap-EXAMPLE00000000",
+        "Attribute": "createVolumePermission",
+        "OperationType": "add",
+        "GroupNames": ["all"]
+      }
+    },
+
+    "hardened_sharing_pattern": {
+      "api_call": "ModifySnapshotAttribute",
+      "parameters": {
+        "SnapshotId": "snap-EXAMPLE00000000",
+        "Attribute": "createVolumePermission",
+        "OperationType": "add",
+        "UserIds": ["123456789099"]
+      },
+      "notes": "Share explicitly with named account IDs (UserIds) only; never use GroupNames: ['all']."
+    },
+
+    "hardened_scp_or_config_rule": {
+      "description": "Preventive guardrail: an AWS Config managed rule or SCP that flags/denies any snapshot or AMI made public.",
+      "config_rule": "ec2-ebs-encryption-by-default (combined with a custom Config rule or EventBridge+Lambda auto-remediation watching for ModifySnapshotAttribute/ModifyImageAttribute with Group=all)"
+    },
+
+    "hardening_notes": [
+      "Enable EBS encryption by default (ec2 enable-ebs-encryption-by-default) in every region used, so even an accidentally public snapshot cannot be read without the account's KMS key.",
+      "Enable the account-level EBS snapshot block public access setting: aws ec2 enable-snapshot-block-public-access --state block-all-sharing --region us-west-2 --profile flaws-sandbox.",
+      "Periodically audit snapshot permissions with: aws ec2 describe-snapshots --owner-ids self --region us-west-2 --profile flaws-sandbox, then aws ec2 describe-snapshot-attribute --snapshot-id <id> --attribute createVolumePermission for each, checking for Group: all."
+    ]
+  },
+
+  "bonus_theme_ec2_imdsv2_and_least_privilege_role": {
+    "description": "Hardens the Level 5 weakness: SSRF against IMDSv1 exposing instance role credentials, and an overly broad instance role.",
+
+    "vulnerable_pattern_observed": {
+      "metadata_options": {
+        "HttpTokens": "optional",
+        "HttpPutResponseHopLimit": 2,
+        "HttpEndpoint": "enabled"
+      }
+    },
+
+    "hardened_metadata_options": {
+      "HttpTokens": "required",
+      "HttpPutResponseHopLimit": 1,
+      "HttpEndpoint": "enabled",
+      "cli_example": "aws ec2 modify-instance-metadata-options --instance-id i-EXAMPLE00000000 --http-tokens required --http-put-response-hop-limit 1 --region us-west-2 --profile flaws-sandbox"
+    },
+
+    "hardened_least_privilege_instance_role": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "AllowOnlyRequiredReadOfOwnConfigBucket",
+          "Effect": "Allow",
+          "Action": ["s3:GetObject"],
+          "Resource": "arn:aws:s3:::app-config-bucket-123456789012/nginx/*"
+        }
+      ]
+    },
+
+    "hardening_notes": [
+      "HttpTokens: required enforces IMDSv2 so a simple GET-based SSRF proxy cannot complete the PUT-token handshake and is refused.",
+      "The instance role here is scoped to a single read-only action on a single named prefix, unlike the challenge role which could list an unrelated bucket (level6 bucket) it had no legitimate need to reach.",
+      "Validate with IAM Policy Simulator (console or aws iam simulate-custom-policy) confirming s3:ListBucket on any bucket other than the named prefix evaluates to implicitDeny."
+    ]
+  }
+}
