@@ -1,7 +1,9 @@
 Task 29 – Phase E: Defensive Engineering (Hardening & Detection Validation)
+
 Objective
 
 Turn the flaws.cloud findings from Levels 1–6 into defensive controls. For each misconfiguration, identify the root cause, define preventive and detective controls, and validate the hardening in my own sandbox account.
+
 
 Actions Taken
 Built the hardening matrix (PhaseE_HardeningMatrix.xlsx, sheet Hardening Matrix). It has six rows, one per finding, each with root cause, preventive control, detective control, AWS service, priority and validation method.
@@ -16,6 +18,9 @@ Removed the challenge credentials from the local AWS CLI config for flaws-l2, fl
 Verified each change with read-back commands:
 aws s3control get-public-access-block ... returned all four settings as true.
 aws ec2 get-snapshot-block-public-access-state ... returned block-all-sharing, ManagedBy: account.
+
+
+
 Key Observations
 Level	Root cause	Preventive control	Detective control
 1	Public bucket listing	S3 Block Public Access, private bucket policy	CloudTrail S3 data events, Config rule s3-bucket-public-read-prohibited
@@ -27,6 +32,8 @@ Level	Root cause	Preventive control	Detective control
 Block Public Access is a single account-level control that closes the Level 1 and 2 exposure classes.
 EBS snapshot block public access is regional, so it must be enabled in every region in use. I enabled it in us-west-2 only.
 Clearing local credentials does not invalidate them. The IAM keys must also be deactivated or deleted on the AWS side.
+
+
 Evidence Produced
 PhaseE_HardeningMatrix.xlsx (Hardening Matrix, Detection Plan, Sandbox Review sheets)
 hardened_policy_examples.json
