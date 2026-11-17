@@ -1,10 +1,10 @@
-# Phase E: Defensive Engineering — Hardening & Detection Validation
+Phase E: Defensive Engineering — Hardening & Detection Validation
 
-## Objective
+Objective
 
-Translate the six weaknesses found across flaws.cloud Levels 1–6 into practical AWS hardening controls, policy validation, and detection requirements that a Cloud Security Engineer could implement in a real environment.
+Translate the six weaknesses found across flaws. Cloud Levels 1–6 into practical AWS hardening controls, policy validation, and detection requirements that a Cloud Security Engineer could implement in a real environment.
 
-## Actions Taken
+Actions Taken
 
 I built a six-row hardening matrix, one row per challenge level, covering the root cause, the preventive control, the detective control, the responsible AWS service, an implementation priority, and a validation method for each. Priorities were assigned by how severe and how easily exploitable each weakness was in practice: the Level 3 leaked Git credential and the Level 5 SSRF/IMDS credential theft were rated Critical, since both yield a usable, live credential with comparatively low attacker effort; Levels 1, 2, and 4 were rated High, since each exposes data or infrastructure directly but requires a bit more reconnaissance; Level 6 was rated Medium, since it required deliberate, methodical enumeration across three services and yielded discovery of a hidden endpoint rather than direct credential or data exposure.
 
@@ -14,7 +14,7 @@ I documented a detection plan covering five suspicious activities, one more than
 
 Finally, I built a sandbox review checklist covering the four items specified: S3 Block Public Access status at the account level, the EBS snapshot public-access protection setting in the working region, confirmation that no stale challenge credentials remain configured in local AWS CLI profiles, and verification that every Level 4 temporary resource (instance, volume, security group, snapshot) was deleted. I ran the listed commands against my sandbox account and recorded the results.
 
-## Key Observations
+Key Observations
 
 Building this matrix after working through the challenge rather than before made the root-cause column far more precise: having actually exploited each weakness firsthand meant the preventive control could be stated specifically (for example, "block Group=all on `ModifySnapshotAttribute`") rather than generically ("secure your snapshots").
 
@@ -24,7 +24,8 @@ Validating the hardened policies rather than just writing them matters because a
 
 The sandbox review step closed the loop on every prior phase: it isn't enough to clean up resources as each level finishes, since account-wide settings like S3 Block Public Access or the EBS snapshot public-access state are posture checks that should be verified independently of any single task, and a credential profile left configured from an earlier level is itself a residual risk worth catching before considering the engagement complete.
 
-## Evidence Produced
+Evidence Produced
 
-- PhaseE_HardeningMatrix.xlsx`** — three-sheet workbook: *Hardening Matrix* (the six-row table covering root cause, preventive control, detective control, responsible AWS service, priority, and validation method for Levels 1–6), *Detection Plan* (five CloudTrail/CloudWatch/EventBridge use cases with management-event vs. data-event distinctions), and *Sandbox Review* (the four required checks with exact commands, expected results, and a status column completed against my sandbox account).
-- **`hardened_policy_examples.json`** — vulnerable-pattern-to-hardened-replacement pairs for four themes: restrictive S3 access, credential/secret handling via Secrets Manager, EBS snapshot sharing, and EC2 IMDSv2/least-privilege instance roles, each with its corresponding `accessanalyzer validate-policy` validation command.
+- PhaseE_HardeningMatrix.xlsx — three-sheet workbook: *Hardening Matrix* (the six-row table covering root cause, preventive control, detective control, responsible AWS service, priority, and validation method for Levels 1–6), *Detection Plan* (five CloudTrail/CloudWatch/EventBridge use cases with management-event vs. data-event distinctions), and *Sandbox Review* (the four required checks with exact commands, expected results, and a status column completed against my sandbox account).
+- PhaseE_hardened_policy_examples.json — vulnerable-pattern-to-hardened-replacement pairs for four themes: restrictive S3 access, credential/secret handling via Secrets Manager, EBS snapshot sharing, and EC2 IMDSv2/least-privilege instance roles, each with its corresponding `accessanalyzer validate-policy` validation command.
+- PhaseE_PolicyValidation.png — `aws accessanalyzer validate-policy` output for all three hardened policies (S3 bucket policy, Secrets Manager identity policy, least-privilege instance role policy), each returning zero findings.
