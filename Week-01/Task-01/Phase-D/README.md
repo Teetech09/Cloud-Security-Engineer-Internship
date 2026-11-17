@@ -1,10 +1,10 @@
-# Phase D – Independent Extension: Threat Modeling
+Phase D – Independent Extension: Threat Modeling
 
-## Objective
+Objective
 
 The objective of this phase was to develop a basic threat model showing how cloud misconfigurations could potentially lead to compromise.
 
-## Business Assets
+Business Assets
 
 The main cloud assets considered were:
 
@@ -13,7 +13,7 @@ The main cloud assets considered were:
 - IAM identities and permissions
 - CloudTrail security logs
 
-## Threats Identified
+Threats Identified
 
 The following threats were considered:
 
@@ -24,7 +24,7 @@ The following threats were considered:
 5. Excessive IAM permissions
 6. Insufficient protection of security logs
 
-## Risk Assessment
+Risk Assessment
 
 A risk matrix was created to assess each identified threat based on:
 
@@ -34,7 +34,7 @@ A risk matrix was created to assess each identified threat based on:
 
 See `risk_matrix.xlsx`.
 
-## Key Misconfiguration
+Key Misconfiguration
 
 The primary configuration risk identified was unrestricted EC2 outbound traffic.
 
@@ -46,7 +46,7 @@ The security group allows:
 
 If the EC2 instance were compromised, this configuration could allow communication with external IPv4 destinations.
 
-## Attack Path
+Attack Path
 
 A potential attack path was modeled as:
 
@@ -65,7 +65,7 @@ EC2 Instance
 
 The diagram represents a potential attack scenario and does not indicate that the EC2 instance has actually been compromised.
 
-## Mitigation
+Mitigation
 
 Recommended controls include:
 
@@ -77,17 +77,17 @@ Recommended controls include:
 - Protect CloudTrail logs using appropriate S3 access controls.
 - Monitor cloud activity using CloudTrail.
 
-## Evidence
+ Evidence
 
-### Risk Matrix
+Risk Matrix
 
-`risk_matrix.xlsx`
+risk_matrix.xlsx
 
-### Threat Model Diagram
+Threat Model Diagram
 
-`threat_model_diagram.png`
+threat_model_diagram.png
 
-## Lessons Learned
+Lessons Learned
 
 This exercise demonstrated how cloud configuration weaknesses can contribute to security risks and how threat modeling can be used to visualize potential attack paths.
 
