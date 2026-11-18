@@ -1,12 +1,12 @@
 Actions Taken
 
-    • Compiled the full flaws.cloud assessment (Levels 1 to 6) into a professional report, Final_Report.pdf. 
-    • Documented the complete attack chain from Phases A to D: public S3 listing → authenticated S3 access → secrets in Git history → public EBS snapshot → SSRF to the instance metadata service → IAM, Lambda and API Gateway permission discovery. 
-    • Completed the findings template for each level (service, misconfiguration, evidence, C/I/A impact, likelihood, impact, MITRE ATT&CK mapping, remediation, validation method). 
-    • Rated each finding by likelihood and impact and ordered them into a prioritized remediation roadmap. 
-    • Carried in the Phase E hardening matrix, hardened policy examples, detection plan and sandbox validation results as the defensive section. 
-    • Organized every screenshot, command log, redacted output, policy JSON and cleanup proof into one Evidence folder with clear Phase/Level filenames. 
-    • Redacted all access keys, secrets and the final challenge solution URL from the report and evidence. 
+• Compiled the full flaws.cloud assessment (Levels 1 to 6) into a professional report, Final_Report.pdf. 
+• Documented the complete attack chain from Phases A to D: public S3 listing → authenticated S3 access → secrets in Git history → public EBS snapshot → SSRF to the instance metadata service → IAM, Lambda and API Gateway permission discovery. 
+• Completed the findings template for each level (service, misconfiguration, evidence, C/I/A impact, likelihood, impact, MITRE ATT&CK mapping, remediation, validation method). 
+• Rated each finding by likelihood and impact and ordered them into a prioritized remediation roadmap. 
+• Carried in the Phase E hardening matrix, hardened policy examples, detection plan and sandbox validation results as the defensive section. 
+• Organized every screenshot, command log, redacted output, policy JSON and cleanup proof into one Evidence folder with clear Phase/Level filenames. 
+• Redacted all access keys, secrets and the final challenge solution URL from the report and evidence. 
 
 Key Observations
     • The chain succeeded because of a few repeated root causes: public exposure of storage, poor secrets handling, and over-broad permissions. One weakness in each level handed the attacker the access for the next. 
