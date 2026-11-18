@@ -40,13 +40,13 @@ Block Public Access is a single account-level control that closes the Level 1 an
 EBS snapshot block public access is regional, so it must be enabled in every region in use. I enabled it in us-west-2 only.
 Clearing local credentials does not invalidate them. The IAM keys must also be deactivated or deleted on the AWS side.
 
+
 Evidence Produced
-    • Final_Report.pdf 
+
+    •  PhaseE_HardeningMatrix.xlsx — three-sheet workbook: *Hardening Matrix* (the six-row table covering root cause, preventive control, detective control, responsible AWS service, priority, and validation method for Levels 1–6), *Detection Plan* (five CloudTrail/CloudWatch/EventBridge use cases with management-event vs. data-event distinctions), and *Sandbox Review* (the four required checks with exact commands, expected results, and a status column completed against my sandbox account).
+    • PhaseE_hardened_policy_examples.json — vulnerable-pattern-to-hardened-replacement pairs for four themes: restrictive S3 access, credential/secret handling via Secrets Manager, EBS snapshot sharing, and EC2 IMDSv2/least-privilege instance roles, each with its corresponding `accessanalyzer validate-policy` validation command.
+    • PhaseE_PolicyValidation.png — `aws accessanalyzer validate-policy` output for all three hardened policies (S3 bucket policy, Secrets Manager identity policy, least-privilege instance role policy), each returning zero findings.
     
 
 
-Evidence Produced
-PhaseE_HardeningMatrix.xlsx (Hardening Matrix, Detection Plan, Sandbox Review sheets)
-hardened_policy_examples.json
-[your screenshot filename].png (sandbox hardening verification)
-Command output for get-public-access-block and get-snapshot-block-public-access-state
+
