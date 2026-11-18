@@ -43,8 +43,10 @@ Clearing local credentials does not invalidate them. The IAM keys must also be d
 
 Evidence Produced
 
-• PhaseE_HardeningMatrix.xlsx — three-sheet workbook: *Hardening Matrix* (the six-row table covering root cause, preventive control, detective control, responsible AWS service, priority, and validation method for Levels 1–6), *Detection Plan* (five CloudTrail/CloudWatch/EventBridge use cases with management-event vs. data-event distinctions), and *Sandbox Review* (the four required checks with exact commands, expected results, and a status column completed against my sandbox account).
+• PhaseE_HardeningMatrix.xlsx — three-sheet workbook: *Hardening Matrix* (the six-row table covering root cause, preventive control, detective control, responsible AWS service, priority, and validation method for Levels 1–6), *Detection Plan* (five CloudTrail/CloudWatch/EventBridge use cases with management-event vs. data-event distinctions).
+
 • PhaseE_hardened_policy_examples.json — vulnerable-pattern-to-hardened-replacement pairs for four themes: restrictive S3 access, credential/secret handling via Secrets Manager, EBS snapshot sharing, and EC2 IMDSv2/least-privilege instance roles, each with its corresponding `accessanalyzer validate-policy` validation command.
+
 • PhaseE_PolicyValidation.png — `aws accessanalyzer validate-policy` output for all three hardened policies (S3 bucket policy, Secrets Manager identity policy, least-privilege instance role policy), each returning zero findings.
     
 
